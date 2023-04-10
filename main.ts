@@ -2,7 +2,6 @@ import { Map, View } from "ol";
 import { ScaleLine } from "ol/control";
 import OSMXML from "ol/format/OSMXML";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
-import { fromLonLat } from "ol/proj";
 import { OSM, Vector as VectorSource } from "ol/source";
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from "ol/style";
 import "./style.css";
@@ -66,7 +65,7 @@ const vectorLayer = new VectorLayer({
   },
 });
 
-new Map({
+const map = new Map({
   target: "map",
   layers: [
     new TileLayer({
@@ -75,12 +74,10 @@ new Map({
     }),
     vectorLayer,
   ],
-  view: new View({
-    center: fromLonLat([15.6268, 48.4098]),
-    zoom: 11,
-  }),
+  view: new View({}),
   controls: [new ScaleLine()],
 });
+map.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
 
 async function queryOverpass(ql: string): Promise<string> {
   const res = await fetch("https://overpass-api.de/api/interpreter", {
