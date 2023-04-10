@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@types/geojson": "^7946.0.10",
+    "peggy": "^3.0.2",
     "vite": "^4.2.1"
   },
   "dependencies": {

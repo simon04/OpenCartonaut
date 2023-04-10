@@ -4,6 +4,7 @@ import OSMXML from "ol/format/OSMXML";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM, Vector as VectorSource } from "ol/source";
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from "ol/style";
+import MapCSS from "./mapcss.pegjs";
 import "./style.css";
 
 (document.getElementById("execute") as HTMLButtonElement).onclick = execute;
@@ -75,6 +76,13 @@ async function queryOverpass(ql: string): Promise<string> {
 }
 
 async function execute() {
+  try {
+    const mapcss = document.getElementById("mapcss") as HTMLTextAreaElement;
+    const rules = MapCSS.parse(mapcss.value);
+    console.log("Parsed MapCSS", rules);
+  } catch (e) {
+    console.error("Failed to parse MapCSS", e);
+  }
   const query = (document.getElementById("query") as HTMLTextAreaElement).value;
   const xml = await queryOverpass(query);
   const vectorSource = new VectorSource({

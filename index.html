@@ -17,7 +17,55 @@
       out geom;
       </textarea
     >
-    <textarea id="mapcss"></textarea>
+    <textarea id="mapcss">
+node,
+way,
+relation {
+  color: black;
+  fill-color: black;
+  opacity: 1;
+  fill-opacity: 1;
+  width: 10;
+}
+node {
+  color: #03f;
+  width: 2;
+  opacity: 0.7;
+  fill-color: #fc0;
+  fill-opacity: 0.3;
+}
+line {
+  color: #03f;
+  width: 5;
+  opacity: 0.6;
+}
+area {
+  color: #03f;
+  width: 2;
+  opacity: 0.7;
+  fill-color: #fc0;
+  fill-opacity: 0.3;
+}
+relation node,
+relation way,
+relation {
+  color: #d0f;
+}
+way:tainted,
+relation:tainted {
+  dashes: 5, 8;
+}
+way:placeholder,
+relation:placeholder {
+  fill-color: #f22;
+}
+node:active,
+way:active,
+relation:active {
+  color: #f50;
+  fill-color: #f50;
+}
+    </textarea>
     <div id="buttons">
       <button id="execute">Execute</button>
     </div>
