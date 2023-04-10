@@ -1,0 +1,15 @@
+{
+  "name": "overpass-ol",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^4.2.1"
+  },
+  "dependencies": {
+    "ol": "7.3.0"
+  }
+}
