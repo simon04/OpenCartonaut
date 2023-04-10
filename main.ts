@@ -3,57 +3,19 @@ import { ScaleLine } from "ol/control";
 import OSMXML from "ol/format/OSMXML";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM, Vector as VectorSource } from "ol/source";
-import { Circle as CircleStyle, Fill, Stroke, Style, Text } from "ol/style";
+import { Rule, evaluateStyle } from "./mapcss";
 import MapCSS from "./mapcss.pegjs";
 import defaultMapCSS from "./default.mapcss?raw";
 import "./style.css";
 
-(document.getElementById("execute") as HTMLButtonElement).onclick = execute;
+(document.getElementById("executeQuery") as HTMLButtonElement).onclick =
+  executeQuery;
+(document.getElementById("executeStyle") as HTMLButtonElement).onclick =
+  executeStyle;
+(document.getElementById("mapcss") as HTMLTextAreaElement).value ||=
+  defaultMapCSS;
 
-const lineStyle = new Style({
-  stroke: new Stroke({
-    color: "#dc0000",
-    width: 4,
-  }),
-});
-
-const textStyle = new Style({
-  image: new CircleStyle({
-    radius: 5,
-    fill: new Fill({ color: "#dc0000" }),
-    stroke: new Stroke({ color: "#dc0000", width: 1 }),
-  }),
-  text: new Text({
-    fill: new Fill({ color: "#dc0000" }),
-    stroke: new Stroke({ color: "white", width: 2 }),
-    font: "14px Noto Sans",
-    textAlign: "start",
-    textBaseline: "bottom",
-    text: "",
-  }),
-});
-
-const vectorLayer = new VectorLayer({
-  style: (feature) => {
-    const type = feature.getGeometry()!.getType();
-    const name = feature.getProperties().name;
-    if (
-      type === "LineString" ||
-      type === "MultiLineString" ||
-      type === "GeometryCollection"
-    ) {
-      return lineStyle;
-    } else if (type === "Point" && name) {
-      const text = textStyle.getText();
-      const left =
-        /Rohrendorf|Gedersdorf|Langenlois|Gars|Stallegg|Rosenburg|Horn/;
-      text.setText(`  ${name}  `);
-      text.setTextAlign(left.test(name) ? "end" : "start");
-      text.setTextBaseline(/Krems/.test(name) ? "top" : "bottom");
-      return textStyle;
-    }
-  },
-});
+const vectorLayer = new VectorLayer({});
 
 const map = new Map({
   target: "map",
@@ -76,14 +38,7 @@ async function queryOverpass(ql: string): Promise<string> {
   return await res.text();
 }
 
-async function execute() {
-  try {
-    const mapcss = document.getElementById("mapcss") as HTMLTextAreaElement;
-    const rules = MapCSS.parse(mapcss.value);
-    console.log("Parsed MapCSS", rules);
-  } catch (e) {
-    console.error("Failed to parse MapCSS", e);
-  }
+async function executeQuery() {
   const query = (document.getElementById("query") as HTMLTextAreaElement).value;
   const xml = await queryOverpass(query);
   const vectorSource = new VectorSource({
@@ -94,4 +49,23 @@ async function execute() {
   });
   vectorLayer.setSource(vectorSource);
   map.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
+  executeStyle();
+}
+
+async function executeStyle() {
+  let rules: Rule[];
+  try {
+    console.time("Parsing MapCSS");
+    const mapcss = document.getElementById("mapcss") as HTMLTextAreaElement;
+    rules = MapCSS.parse(mapcss.value);
+    console.timeEnd("Parsing MapCSS");
+    console.info("Parsed MapCSS", rules);
+  } catch (e) {
+    console.error("Failed to parse MapCSS", e);
+  }
+  vectorLayer
+    .getSource()!
+    .forEachFeature((feature) =>
+      feature.setStyle(evaluateStyle(rules, feature))
+    );
 }

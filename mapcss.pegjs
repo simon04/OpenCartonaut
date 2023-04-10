@@ -32,8 +32,9 @@ Rule "rule"
 Selectors
   = ParentChildSelector|..,(_ "," _)|
 ParentChildSelector
-  = head:Selector tail:(_ (child:">" / parent:"<" / sibling:"+" / memberOf:"∈" / subset:"⊆" / notSubset:"⊈" / superset:"⊇" / notSuperset:"⊉" / crossing:"⧉")? _ Selector)*
-  { return tail.reduce((arg1, [, op, , arg2]) => ({type: "ParentChildSelector", op, args: [arg1, arg2]}), head); }
+  = head:Selector tail:(_ (ParentChildOp Condition*)? _ Selector)*
+  { return tail.reduce((arg1, [, op = [undefined, undefined], , arg2]) => ({type: "ParentChildSelector", op: op?.[0], conditions: op?.[1], args: [arg1, arg2]}), head); }
+ParentChildOp = child:">" / parent:"<" / sibling:"+" / memberOf:"∈" / subset:"⊆" / notSubset:"⊈" / superset:"⊇" / notSuperset:"⊉" / crossing:"⧉"
 Selector "selector" =
   base:Base
   zoom:Zoom?
@@ -53,9 +54,9 @@ Zoom "zoom" = "|z" @(
 Condition "condition"
   = PseudoClassCondition
   / ClassCondition
-  / "[" _ @ExpressionCondition _ "]"
   / "[" _ @KeyCondition _ "]"
   / "[" _ @KeyValueCondition _ "]"
+  / "[" _ @ExpressionCondition _ "]"
 ExpressionCondition =
   not:"!"?
   exp:Expression
@@ -134,7 +135,7 @@ Float "float"
   { return parseFloat(text()); }
 FloatUnit
   = value:Float unit:Unit?
-  { return value * unit; }
+  { return value * (unit ?? 1); }
 FloatArray 
   = Float|2..,(_ "," _)|
 Unit

@@ -1,0 +1,55 @@
+node,
+way,
+relation {
+  fill-opacity: 0;
+  opacity: 0;
+}
+way[railway="rail"][service!="spur"][service!="yard"][service!="siding"] {
+  color: #dc0000;
+  opacity: 0.8;
+  width: 1;
+}
+way[railway][tunnel="yes"] {
+  dashes: 7, 7;
+}
+way[railway] {
+  color: #dc0000;
+  opacity: 1;
+  width: 4;
+}
+
+node[name] {
+  color: #dc0000;
+  fill-color: #dc0000;
+  fill-opacity: 1;
+  font-family: "Noto Sans";
+  font-size: 12pt;
+  font-weight: bold;
+  icon-width: 5;
+  opacity: 1;
+  text-anchor-horizontal: left;
+  text-anchor-vertical: bottom;
+  text-color: #dc0000;
+  text: name;
+  text-offset-x: 5;
+  width: 2;
+}
+
+node[name="Breiteneich bei Horn"],
+node[name="Gars-Thunau"],
+node[name="Gars-Thunau"],
+node[name="Gedersdorf"],
+node[name="Horn"],
+node[name="Horn"],
+node[name="Langenlois"],
+node[name="Langenlois"],
+node[name="Rohrendorf"],
+node[name="Rosenburg"],
+node[name="Stallegg"] {
+  text-anchor-horizontal: right;
+  text-offset-x: -5;
+}
+
+node[name="Krems a. d. Donau"] {
+  text-anchor-vertical: top;
+}
