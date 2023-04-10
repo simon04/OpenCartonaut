@@ -1,23 +1,20 @@
-import type { FeatureCollection } from "geojson";
 import { Map, View } from "ol";
 import { ScaleLine } from "ol/control";
-import { GeoJSON } from "ol/format";
+import OSMXML from "ol/format/OSMXML";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { fromLonLat } from "ol/proj";
 import { OSM, Vector as VectorSource } from "ol/source";
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from "ol/style";
 import "./style.css";
 
-const geojson = await queryOverpass(`
-[out:json];
+const xml = await queryOverpass(`
 relation(4740507);
 (._;>;);
-convert Feature ::=::,::geom=geom(),_osm_type=type();
 out geom;
 `);
 
 const vectorSource = new VectorSource({
-  features: new GeoJSON().readFeatures(geojson, {
+  features: new OSMXML().readFeatures(xml, {
     dataProjection: "EPSG:4326",
     featureProjection: "EPSG:3857",
   }),
@@ -59,14 +56,10 @@ const vectorLayer = new VectorLayer({
       return lineStyle;
     } else if (type === "Point" && name) {
       const text = textStyle.getText();
+      const left =
+        /Rohrendorf|Gedersdorf|Langenlois|Gars|Stallegg|Rosenburg|Horn/;
       text.setText(`  ${name}  `);
-      text.setTextAlign(
-        /Rohrendorf|Gedersdorf|Langenlois|Gars|Stallegg|Rosenburg|Horn/.test(
-          name
-        )
-          ? "end"
-          : "start"
-      );
+      text.setTextAlign(left.test(name) ? "end" : "start");
       text.setTextBaseline(/Krems/.test(name) ? "top" : "bottom");
       return textStyle;
     }
@@ -89,18 +82,10 @@ new Map({
   controls: [new ScaleLine()],
 });
 
-async function queryOverpass(ql: string): Promise<FeatureCollection> {
+async function queryOverpass(ql: string): Promise<string> {
   const res = await fetch("https://overpass-api.de/api/interpreter", {
     method: "POST",
     body: "data=" + encodeURIComponent(ql),
   });
-  const json = await res.json();
-  return {
-    type: "FeatureCollection",
-    features: json.elements.map((feature) => ({
-      ...feature,
-      tags: undefined,
-      properties: feature.tags,
-    })),
-  };
+  return await res.text();
 }
