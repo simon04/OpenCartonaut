@@ -6,18 +6,7 @@ import { OSM, Vector as VectorSource } from "ol/source";
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from "ol/style";
 import "./style.css";
 
-const xml = await queryOverpass(`
-relation(4740507);
-(._;>;);
-out geom;
-`);
-
-const vectorSource = new VectorSource({
-  features: new OSMXML().readFeatures(xml, {
-    dataProjection: "EPSG:4326",
-    featureProjection: "EPSG:3857",
-  }),
-});
+(document.getElementById("execute") as HTMLButtonElement).onclick = execute;
 
 const lineStyle = new Style({
   stroke: new Stroke({
@@ -43,7 +32,6 @@ const textStyle = new Style({
 });
 
 const vectorLayer = new VectorLayer({
-  source: vectorSource,
   style: (feature) => {
     const type = feature.getGeometry()!.getType();
     const name = feature.getProperties().name;
@@ -74,10 +62,9 @@ const map = new Map({
     }),
     vectorLayer,
   ],
-  view: new View({}),
+  view: new View({ center: [0, 0], zoom: 0 }),
   controls: [new ScaleLine()],
 });
-map.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
 
 async function queryOverpass(ql: string): Promise<string> {
   const res = await fetch("https://overpass-api.de/api/interpreter", {
@@ -85,4 +72,17 @@ async function queryOverpass(ql: string): Promise<string> {
     body: "data=" + encodeURIComponent(ql),
   });
   return await res.text();
+}
+
+async function execute() {
+  const query = (document.getElementById("query") as HTMLTextAreaElement).value;
+  const xml = await queryOverpass(query);
+  const vectorSource = new VectorSource({
+    features: new OSMXML().readFeatures(xml, {
+      dataProjection: "EPSG:4326",
+      featureProjection: "EPSG:3857",
+    }),
+  });
+  vectorLayer.setSource(vectorSource);
+  map.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
 }

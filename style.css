@@ -1,12 +1,27 @@
 @import "node_modules/ol/ol.css";
 
-html, body {
+html,
+body {
   margin: 0;
   height: 100%;
 }
+body {
+  display: grid;
+  grid-template: "query mapcss" 100px "buttons buttons" 20px "map map" auto;
+}
+#query {
+  grid-area: query;
+  resize: none;
+}
+#mapcss {
+  grid-area: mapcss;
+  resize: none;
+}
+#buttons {
+  grid-area: buttons;
+  display: grid;
+  grid-auto-flow: column;
+}
 #map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
+  grid-area: map;
 }
