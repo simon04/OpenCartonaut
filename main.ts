@@ -14,7 +14,10 @@ document
     this.className = "pending";
     executeQuery()
       .then(() => (this.className = "success"))
-      .catch(() => (this.className = "error"))
+      .catch((error: Error) => {
+        this.title = error?.message || String(error);
+        this.className = "error";
+      })
       .then(() => document.getElementById("executeStyle")?.dispatchEvent(e));
   });
 
@@ -22,7 +25,10 @@ document.getElementById("executeStyle")!.addEventListener("click", function () {
   this.className = "pending";
   executeStyle()
     .then(() => (this.className = "success"))
-    .catch(() => (this.className = "error"));
+    .catch((error: Error) => {
+      this.title = error?.message || String(error);
+      this.className = "error";
+    });
 });
 
 (document.getElementById("mapcss") as HTMLTextAreaElement).value ||=
@@ -48,6 +54,10 @@ async function queryOverpass(ql: string): Promise<string> {
     method: "POST",
     body: "data=" + encodeURIComponent(ql),
   });
+  if (!res.ok) {
+    const lines = (await res.text()).split("\n");
+    throw new Error(lines.find((line) => line.includes("Error")));
+  }
   return await res.text();
 }
 
