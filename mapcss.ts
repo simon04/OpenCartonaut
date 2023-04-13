@@ -144,13 +144,17 @@ function matchesKeyValueCondition(
   feature: Feature
 ): boolean {
   let bool: boolean;
+  const osmValue: string =
+    (typeof key === "string" && feature.getProperties()[key]) || "";
   switch (op) {
     case "=":
     case "!=":
-      bool =
-        typeof key === "string" &&
-        matchesStringOrRegExp(value, feature.getProperties()[key]);
+      bool = matchesStringOrRegExp(value, osmValue);
       return op === "!=" ? !bool : bool;
+    case "^=":
+      return typeof value === "string" && osmValue?.startsWith(value);
+    case "$=":
+      return typeof value === "string" && osmValue?.endsWith(value);
   }
   return false;
 }
