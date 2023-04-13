@@ -6,6 +6,7 @@ body {
   height: 100%;
 }
 body {
+  font-family: sans-serif;
   display: grid;
   grid-template: "query mapcss" 100px "buttons buttons" 20px "map map" auto;
 }
