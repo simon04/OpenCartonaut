@@ -23,6 +23,23 @@ body {
   display: grid;
   grid-auto-flow: column;
 }
+button {
+  background-color: #6c757d;
+  border: 1px solid black;
+  color: white;
+}
+button.pending {
+  background-color: #ffc107;
+}
+button.primary {
+  background-color: #0d6efd;
+}
+button.success {
+  background-color: #198754;
+}
+button.error {
+  background-color: #dc3545;
+}
 #map {
   grid-area: map;
 }

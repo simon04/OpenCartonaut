@@ -8,10 +8,23 @@ import MapCSS from "./mapcss.pegjs";
 import defaultMapCSS from "./default.mapcss?raw";
 import "./style.css";
 
-(document.getElementById("executeQuery") as HTMLButtonElement).onclick =
-  executeQuery;
-(document.getElementById("executeStyle") as HTMLButtonElement).onclick =
-  executeStyle;
+document
+  .getElementById("executeQuery")!
+  .addEventListener("click", function (e) {
+    this.className = "pending";
+    executeQuery()
+      .then(() => (this.className = "success"))
+      .catch(() => (this.className = "error"))
+      .then(() => document.getElementById("executeStyle")?.dispatchEvent(e));
+  });
+
+document.getElementById("executeStyle")!.addEventListener("click", function () {
+  this.className = "pending";
+  executeStyle()
+    .then(() => (this.className = "success"))
+    .catch(() => (this.className = "error"));
+});
+
 (document.getElementById("mapcss") as HTMLTextAreaElement).value ||=
   defaultMapCSS;
 
@@ -49,11 +62,10 @@ async function executeQuery() {
   });
   vectorLayer.setSource(vectorSource);
   map.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
-  executeStyle();
 }
 
 async function executeStyle() {
-  let rules: Rule[];
+  let rules: Rule[] = [];
   try {
     console.time("Parsing MapCSS");
     const mapcss = document.getElementById("mapcss") as HTMLTextAreaElement;
