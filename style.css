@@ -8,15 +8,17 @@ body {
 body {
   font-family: sans-serif;
   display: grid;
-  grid-template: "query mapcss" 100px "buttons buttons" 20px "map map" auto;
+  grid-template: "query mapcss" min-content "buttons buttons" 20px "map map" auto;
 }
 #query {
+  min-height: min-content;
   grid-area: query;
-  resize: none;
+  resize: vertical;
 }
 #mapcss {
+  min-height: 100px;
   grid-area: mapcss;
-  resize: none;
+  resize: vertical;
 }
 #buttons {
   grid-area: buttons;
