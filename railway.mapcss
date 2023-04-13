@@ -19,28 +19,36 @@ way[railway] {
 }
 
 node[name] {
-  color: #dc0000;
+  color: white;
   fill-color: #dc0000;
   fill-opacity: 1;
   font-family: "Noto Sans";
-  font-size: 12pt;
   font-weight: bold;
-  icon-width: 5;
   opacity: 1;
   text-anchor-horizontal: left;
   text-anchor-vertical: bottom;
   text-color: #dc0000;
-  text: name;
+  text-halo-color: white;
+  text-halo-opacity: 0.8;
+  text-halo-radius: 2;
   text-offset-x: 5;
-  width: 2;
+  width: 1;
+}
+node[name][railway=station] {
+  font-size: 12pt;
+  icon-width: 6;
+  text: name;
+}
+node[name][railway=halt] {
+  font-size: 9pt;
+  icon-width: 4;
+  text: name;
 }
 
 node[name="Breiteneich bei Horn"],
 node[name="Gars-Thunau"],
 node[name="Gars-Thunau"],
 node[name="Gedersdorf"],
-node[name="Horn"],
-node[name="Horn"],
 node[name="Langenlois"],
 node[name="Langenlois"],
 node[name="Rohrendorf"],
@@ -50,6 +58,7 @@ node[name="Stallegg"] {
   text-offset-x: -5;
 }
 
+node[name="Horn"],
 node[name="Krems a. d. Donau"] {
   text-anchor-vertical: top;
 }
