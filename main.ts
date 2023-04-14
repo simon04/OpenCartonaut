@@ -35,6 +35,7 @@ document
     } catch (error) {
       this.title = error?.message || String(error);
       this.className = "error";
+      console.error(error);
     }
     document.getElementById("executeStyle")?.dispatchEvent(e);
   });
@@ -50,6 +51,7 @@ document
     } catch (error) {
       this.title = error?.message || String(error);
       this.className = "error";
+      console.error(error);
     }
   });
 
