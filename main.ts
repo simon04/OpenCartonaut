@@ -73,6 +73,9 @@ const map = new Map({
 async function queryOverpass(ql: string): Promise<string> {
   const res = await fetch("https://overpass-api.de/api/interpreter", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+    },
     body: "data=" + encodeURIComponent(ql),
   });
   if (!res.ok) {
