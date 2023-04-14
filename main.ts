@@ -23,32 +23,32 @@ mapcssTextarea.value ||=
 
 document
   .getElementById("executeQuery")!
-  .addEventListener("click", function (e) {
-    this.className = "pending";
-    executeQuery(queryTextarea.value)
-      .then(() => {
-        this.className = "success";
-        localStorage.setItem("overpass-ol.query", queryTextarea.value);
-      })
-      .catch((error: Error) => {
-        this.title = error?.message || String(error);
-        this.className = "error";
-      })
-      .then(() => document.getElementById("executeStyle")?.dispatchEvent(e));
-  });
-
-document.getElementById("executeStyle")!.addEventListener("click", function () {
-  this.className = "pending";
-  executeStyle(mapcssTextarea.value)
-    .then(() => {
+  .addEventListener("click", async function (e) {
+    try {
+      this.className = "pending";
+      await executeQuery(queryTextarea.value);
       this.className = "success";
-      localStorage.setItem("overpass-ol.mapcss", mapcssTextarea.value);
-    })
-    .catch((error: Error) => {
+      localStorage.setItem("overpass-ol.query", queryTextarea.value);
+    } catch (error) {
       this.title = error?.message || String(error);
       this.className = "error";
-    });
-});
+    }
+    document.getElementById("executeStyle")?.dispatchEvent(e);
+  });
+
+document
+  .getElementById("executeStyle")!
+  .addEventListener("click", async function () {
+    try {
+      this.className = "pending";
+      await executeStyle(mapcssTextarea.value);
+      this.className = "success";
+      localStorage.setItem("overpass-ol.mapcss", mapcssTextarea.value);
+    } catch (error) {
+      this.title = error?.message || String(error);
+      this.className = "error";
+    }
+  });
 
 const vectorLayer = new VectorLayer({});
 
