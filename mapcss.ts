@@ -224,6 +224,8 @@ function evaluateExpression(
       return args.reduce((a, b) => a / b);
     case "eval":
       return args[0];
+    case "tag":
+      return feature.getProperties()[String(args[0])]
     case "minx":
       return feature.getGeometry()?.getExtent()?.[0];
     case "miny":
