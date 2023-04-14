@@ -8,12 +8,28 @@ import MapCSS from "./mapcss.pegjs";
 import defaultMapCSS from "./default.mapcss?raw";
 import "./style.css";
 
+const queryTextarea = document.getElementById("query") as HTMLTextAreaElement;
+const mapcssTextarea = document.getElementById("mapcss") as HTMLTextAreaElement;
+
+const defaultQuery = `
+relation(4740507);
+(._;>;);
+out geom;`.trim();
+queryTextarea.value ||=
+  localStorage.getItem("overpass-ol.query") || defaultQuery;
+
+mapcssTextarea.value ||=
+  localStorage.getItem("overpass-ol.mapcss") || defaultMapCSS;
+
 document
   .getElementById("executeQuery")!
   .addEventListener("click", function (e) {
     this.className = "pending";
-    executeQuery()
-      .then(() => (this.className = "success"))
+    executeQuery(queryTextarea.value)
+      .then(() => {
+        this.className = "success";
+        localStorage.setItem("overpass-ol.query", queryTextarea.value);
+      })
       .catch((error: Error) => {
         this.title = error?.message || String(error);
         this.className = "error";
@@ -23,16 +39,16 @@ document
 
 document.getElementById("executeStyle")!.addEventListener("click", function () {
   this.className = "pending";
-  executeStyle()
-    .then(() => (this.className = "success"))
+  executeStyle(mapcssTextarea.value)
+    .then(() => {
+      this.className = "success";
+      localStorage.setItem("overpass-ol.mapcss", mapcssTextarea.value);
+    })
     .catch((error: Error) => {
       this.title = error?.message || String(error);
       this.className = "error";
     });
 });
-
-(document.getElementById("mapcss") as HTMLTextAreaElement).value ||=
-  defaultMapCSS;
 
 const vectorLayer = new VectorLayer({});
 
@@ -61,8 +77,7 @@ async function queryOverpass(ql: string): Promise<string> {
   return await res.text();
 }
 
-async function executeQuery() {
-  const query = (document.getElementById("query") as HTMLTextAreaElement).value;
+async function executeQuery(query: string) {
   const xml = await queryOverpass(query);
   const vectorSource = new VectorSource({
     features: new OSMXML().readFeatures(xml, {
@@ -74,12 +89,11 @@ async function executeQuery() {
   map.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
 }
 
-async function executeStyle() {
+async function executeStyle(mapcss: string) {
   let rules: Rule[] = [];
   try {
     console.time("Parsing MapCSS");
-    const mapcss = document.getElementById("mapcss") as HTMLTextAreaElement;
-    rules = MapCSS.parse(mapcss.value);
+    rules = MapCSS.parse(mapcss);
     console.timeEnd("Parsing MapCSS");
     console.info("Parsed MapCSS", rules);
   } catch (e) {
