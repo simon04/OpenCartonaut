@@ -105,10 +105,25 @@ TagKey "tag key"
   = String / Identifier (":" Identifier)*
   { return text(); }
 
-Expression
-  = head:Term tail:(_ ("+" / "-") _ Term)*
+Expression = CondExpression
+CondExpression
+  = arg1:OrExpression _ "?" _ arg2:OrExpression _ ":" _ arg3:OrExpression
+  { return {op: "cond", args: [arg1, arg2, arg3]}; }
+  / OrExpression
+OrExpression
+  = head:AndExpression tail:(_ ("||") _ AndExpression)*
   { return tail.reduce((arg1, [, op, , arg2]) => ({op, args: [arg1, arg2]}), head); }
-Term 
+AndExpression
+  = head:RelExpression tail:(_ ("&&") _ RelExpression)*
+  { return tail.reduce((arg1, [, op, , arg2]) => ({op, args: [arg1, arg2]}), head); }
+RelExpression
+  = arg1:AddExpression _ op:(">" / ">=" / "<=" / "<" / "=" / "==" / "!=") _ arg2:AddExpression
+  { return {op, args: [arg1, arg2]}; }
+  / AddExpression
+AddExpression
+  = head:MulExpression tail:(_ ("+" / "-") _ MulExpression)*
+  { return tail.reduce((arg1, [, op, , arg2]) => ({op, args: [arg1, arg2]}), head); }
+MulExpression
   = head:Factor tail:(_ ("*" / "/") _ Factor)* 
   { return tail.reduce((arg1, [, op, , arg2]) => ({op, args: [arg1, arg2]}), head); }
 Factor
@@ -128,10 +143,10 @@ FunctionArgs
   = Expression|..,(_ "," _)|
 
 Integer "integer"
-  = [-+0-9]+
+  = ("-" / "+")? [0-9]+
   { return parseInt(text()); }
 Float "float"
-  = [-+.0-9]+
+  = ("-" / "+")? [.0-9]+
   { return parseFloat(text()); }
 FloatUnit
   = value:Float unit:Unit?

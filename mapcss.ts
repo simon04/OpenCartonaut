@@ -191,11 +191,30 @@ function evaluateExpression(
   }
   const args = expression.args.map((arg) => evaluateExpression(arg, feature));
   switch (expression.op) {
-    case "+":
+    case "cond": // CondExpression
+      return args[0] ? args[1] : args[2];
+    case "||": // OrExpression
+      return args.reduce((a, b) => a || b);
+    case "&&": // AndExpression
+      return args.reduce((a, b) => a && b);
+    case "+": // AddExpression
       return args.reduce((a, b) => a + b);
+    case ">": // RelExpression
+      return args[0] > args[1];
+    case ">=":
+      return args[0] >= args[1];
+    case "<=":
+      return args[0] <= args[1];
+    case "<":
+      return args[0] < args[1];
+    case "=":
+    case "==":
+      return args[0] === args[1];
+    case "!=":
+      return args[0] !== args[1];
     case "-":
       return args.reduce((a, b) => a - b);
-    case "*":
+    case "*": // MulExpression
       return args.reduce((a, b) => a * b);
     case "/":
       return args.reduce((a, b) => a / b);
