@@ -1,5 +1,6 @@
 import { Map, View } from "ol";
 import { ScaleLine } from "ol/control";
+import { useGeographic } from "ol/proj";
 import OSMXML from "ol/format/OSMXML";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM, Vector as VectorSource } from "ol/source";
@@ -7,6 +8,8 @@ import { Rule, evaluateStyle } from "./mapcss";
 import MapCSS from "./mapcss.pegjs";
 import defaultMapCSS from "./default.mapcss?raw";
 import "./style.css";
+
+useGeographic();
 
 const queryTextarea = document.getElementById("query") as HTMLTextAreaElement;
 const mapcssTextarea = document.getElementById("mapcss") as HTMLTextAreaElement;
@@ -80,10 +83,7 @@ async function queryOverpass(ql: string): Promise<string> {
 async function executeQuery(query: string) {
   const xml = await queryOverpass(query);
   const vectorSource = new VectorSource({
-    features: new OSMXML().readFeatures(xml, {
-      dataProjection: "EPSG:4326",
-      featureProjection: "EPSG:3857",
-    }),
+    features: new OSMXML().readFeatures(xml),
   });
   vectorLayer.setSource(vectorSource);
   map.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
