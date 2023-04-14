@@ -222,6 +222,14 @@ function evaluateExpression(
       return args.reduce((a, b) => a * b);
     case "/":
       return args.reduce((a, b) => a / b);
+    case "minx":
+      return feature.getGeometry()?.getExtent()?.[0];
+    case "miny":
+      return feature.getGeometry()?.getExtent()?.[1];
+    case "maxx":
+      return feature.getGeometry()?.getExtent()?.[2];
+    case "maxy":
+      return feature.getGeometry()?.getExtent()?.[3];
   }
   return undefined;
 }
