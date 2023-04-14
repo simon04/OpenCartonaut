@@ -77,7 +77,11 @@ export function evaluateStyle(
         textBaseline: declarations[
           "text-anchor-vertical"
         ] as CanvasTextBaseline,
-        text: declarations.text as string,
+        text:
+          typeof declarations.text === "number" ||
+          Array.isArray(declarations.text)
+            ? String(declarations.text)
+            : declarations.text,
         offsetX: declarations["text-offset-x"] as number,
         offsetY: declarations["text-offset-y"] as number,
       })
