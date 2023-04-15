@@ -4,12 +4,12 @@ relation {
   fill-opacity: 0;
   opacity: 0;
 }
-way[railway="rail"][service!="spur"][service!="yard"][service!="siding"] {
+way[railway=/rail|narrow_gauge/][service!=spur][service!=yard][service!=siding] {
   color: #dc0000;
   opacity: 0.8;
   width: 1;
 }
-way[railway][tunnel="yes"] {
+way[railway][tunnel=yes] {
   dashes: 7, 7;
 }
 way[railway] {
