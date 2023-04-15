@@ -206,8 +206,6 @@ function evaluateExpression(
       return args.reduce((a, b) => a || b);
     case "&&": // AndExpression
       return args.reduce((a, b) => a && b);
-    case "+": // AddExpression
-      return args.reduce((a, b) => a + b);
     case ">": // RelExpression
       return args[0] > args[1];
     case ">=":
@@ -221,6 +219,8 @@ function evaluateExpression(
       return args[0] === args[1];
     case "!=":
       return args[0] !== args[1];
+    case "+": // AddExpression
+      return args.reduce((a, b) => a + b);
     case "-":
       return args.reduce((a, b) => a - b);
     case "*": // MulExpression
