@@ -109,14 +109,10 @@ async function executeQuery(query: string) {
 }
 
 function executeStyle(mapcss: string) {
-  try {
-    const rules = parseMapCSS(mapcss);
-    console.info("Parsed MapCSS", rules);
-    const vectorSource = vectorLayer.getSource();
-    vectorSource.forEachFeature((feature) =>
-      feature.setStyle(evaluateStyle(rules, feature))
-    );
-  } catch (e) {
-    console.error("Failed to parse MapCSS", e);
-  }
+  const rules = parseMapCSS(mapcss);
+  console.info("Parsed MapCSS", rules);
+  const vectorSource = vectorLayer.getSource();
+  vectorSource.forEachFeature((feature) =>
+    feature.setStyle(evaluateStyle(rules, feature))
+  );
 }

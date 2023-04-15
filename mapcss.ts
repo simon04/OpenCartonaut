@@ -5,6 +5,8 @@ import { fromString as colorFromString } from "ol/color";
 import { Fill, Stroke, Style, Text } from "ol/style";
 import CircleStyle from "ol/style/Circle";
 
+export const SyntaxError: typeof Error = MapCSS.SyntaxError;
+
 export function parseMapCSS(mapcss: string): Rule[] {
   return MapCSS.parse(mapcss);
 }
