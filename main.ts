@@ -1,7 +1,7 @@
 import { Map, View } from "ol";
 import { ScaleLine } from "ol/control";
 import { useGeographic } from "ol/proj";
-import OSMXML from "ol/format/OSMXML";
+import OSMXML from "./OSMXML";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM, Vector as VectorSource } from "ol/source";
 import { Rule, evaluateStyle } from "./mapcss";
