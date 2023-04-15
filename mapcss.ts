@@ -66,10 +66,13 @@ export function evaluateStyle(
               width: declarations["text-halo-radius"] as number,
             })
           : undefined,
-        font:
-          declarations["font-size"] && declarations["font-family"]
-            ? `${declarations["font-size"]}px ${declarations["font-family"]}`
-            : undefined,
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/font
+        // [ [ <'font-style'> || <font-variant-css2> || <'font-weight'> || <font-stretch-css3> ]? <'font-size'> [ / <'line-height'> ]? <'font-family'> ]
+        font: declarations["font"]
+          ? String(declarations["font"])
+          : declarations["font-size"] && declarations["font-family"]
+          ? `${declarations["font-size"]}px ${declarations["font-family"]}`
+          : undefined,
         rotation: declarations["text-rotation"] as number,
         placement: declarations["text-position"] as "point" | "line",
         textAlign: declarations["text-anchor-horizontal"] as CanvasTextAlign,
@@ -389,6 +392,7 @@ export type StyleKeys =
   | "fill-extent-threshold"
   | "fill-image"
   | "fill-opacity"
+  | "font"
   | "font-family"
   | "font-size"
   | "font-style"

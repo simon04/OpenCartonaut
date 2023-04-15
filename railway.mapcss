@@ -22,8 +22,6 @@ node[name] {
   color: white;
   fill-color: #dc0000;
   fill-opacity: 1;
-  font-family: "Noto Sans";
-  font-weight: bold;
   opacity: 1;
   text-anchor-horizontal: left;
   text-anchor-vertical: bottom;
@@ -35,13 +33,13 @@ node[name] {
 }
 node[name][railway=station] {
   text-offset-x: 7;
-  font-size: 12pt;
+  font: "bold 12pt / 1.0 Noto Sans ";
   icon-width: 6;
   text: name;
 }
 node[name][railway=halt] {
   text-offset-x: 5;
-  font-size: 9pt;
+  font: "bold 9pt / 1.0 Noto Sans ";
   icon-width: 4;
   text: name;
 }
