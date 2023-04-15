@@ -4,8 +4,7 @@ import { useGeographic } from "ol/proj";
 import OSMXML from "./OSMXML";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM, Vector as VectorSource } from "ol/source";
-import { Rule, evaluateStyle } from "./mapcss";
-import MapCSS from "./mapcss.pegjs";
+import { evaluateStyle, parseMapCSS } from "./mapcss";
 import defaultMapCSS from "./default.mapcss?raw";
 import "./style.css";
 
@@ -96,19 +95,15 @@ async function executeQuery(query: string) {
   map.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
 }
 
-async function executeStyle(mapcss: string) {
-  let rules: Rule[] = [];
+function executeStyle(mapcss: string) {
   try {
-    console.time("Parsing MapCSS");
-    rules = MapCSS.parse(mapcss);
-    console.timeEnd("Parsing MapCSS");
+    const rules = parseMapCSS(mapcss);
     console.info("Parsed MapCSS", rules);
+    const vectorSource = vectorLayer.getSource();
+    vectorSource.forEachFeature((feature) =>
+      feature.setStyle(evaluateStyle(rules, feature))
+    );
   } catch (e) {
     console.error("Failed to parse MapCSS", e);
   }
-  vectorLayer
-    .getSource()!
-    .forEachFeature((feature) =>
-      feature.setStyle(evaluateStyle(rules, feature))
-    );
 }

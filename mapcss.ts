@@ -1,7 +1,12 @@
+import MapCSS from "./mapcss.pegjs";
 import type { Feature } from "ol";
 import { fromString as colorFromString } from "ol/color";
 import { Fill, Stroke, Style, Text } from "ol/style";
 import CircleStyle from "ol/style/Circle";
+
+export function parseMapCSS(mapcss: string): Rule[] {
+  return MapCSS.parse(mapcss);
+}
 
 export function evaluateStyle(
   rules: Rule[],
@@ -225,7 +230,7 @@ function evaluateExpression(
     case "eval":
       return args[0];
     case "tag":
-      return feature.getProperties()[String(args[0])]
+      return feature.getProperties()[String(args[0])];
     case "minx":
       return feature.getGeometry()?.getExtent()?.[0];
     case "miny":
