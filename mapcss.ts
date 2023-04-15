@@ -1,5 +1,6 @@
 import MapCSS from "./mapcss.pegjs";
 import type { Feature } from "ol";
+import { Geometry } from "ol/geom";
 import { fromString as colorFromString } from "ol/color";
 import { Fill, Stroke, Style, Text } from "ol/style";
 import CircleStyle from "ol/style/Circle";
@@ -8,22 +9,15 @@ export function parseMapCSS(mapcss: string): Rule[] {
   return MapCSS.parse(mapcss);
 }
 
+type EvaluatedDeclarations = Partial<
+  Record<StyleKeys, string | number | number[] | undefined>
+>;
+
 export function evaluateStyle(
   rules: Rule[],
-  feature: Feature
+  feature: Feature | Geometry
 ): Style | undefined {
-  const declarations: Partial<
-    Record<StyleKeys, string | number | number[] | undefined>
-  > = {};
-  rules.forEach((rule) => {
-    const matches = rule.selectors.some((selector) =>
-      matchesSelector(selector, feature)
-    );
-    if (!matches) return;
-    rule.declaration.forEach((declaration) =>
-      Object.assign(declarations, evaluateDeclaration(declaration, feature))
-    );
-  });
+  const declarations: EvaluatedDeclarations = evaluateRules(rules, feature);
 
   if (Object.keys(declarations).length === 0) {
     return undefined;
@@ -99,24 +93,54 @@ export function evaluateStyle(
     text,
   });
 }
+
+export function evaluateRules(
+  rules: Rule[],
+  feature: Geometry | Feature<Geometry>
+): EvaluatedDeclarations {
+  const declarations: EvaluatedDeclarations = {};
+  rules.forEach((rule) => evaluateRule(rule, feature, declarations));
+  return declarations;
+}
+
+function evaluateRule(
+  rule: Rule,
+  feature: Feature | Geometry,
+  declarations?: EvaluatedDeclarations
+): EvaluatedDeclarations {
+  declarations ||= {};
+  const matches = rule.selectors.some((selector) =>
+    matchesSelector(selector, feature)
+  );
+  if (!matches) return;
+  rule.declaration.forEach((declaration) =>
+    Object.assign(declarations, evaluateDeclaration(declaration, feature))
+  );
+  return declarations;
+}
+
 function evaluateColor(color: string, opacity: number | undefined) {
   if (!color) return undefined;
   const c = colorFromString(color);
   return typeof opacity === "number" ? [c[0], c[1], c[2], opacity] : c;
 }
 
-function matchesSelector(selector: Selector, feature: Feature) {
+function matchesSelector(selector: Selector, feature: Feature | Geometry) {
   return (
     matchesBase(selector.base, feature) &&
     selector.conditions.every((c) => matchesCondition(c, feature))
   );
 }
 
-function matchesBase(base: Base, feature: Feature) {
-  const type = feature.getGeometry()!.getType();
+function matchesBase(base: Base, feature: Feature | Geometry) {
+  if (base === "*") {
+    return true;
+  }
+  const type =
+    feature instanceof Geometry
+      ? (feature as Geometry).getType()
+      : (feature as Feature).getGeometry()!.getType();
   switch (base) {
-    case "*":
-      return true;
     case "node":
       return type === "Point" || type === "MultiPoint";
     case "way":
@@ -128,7 +152,10 @@ function matchesBase(base: Base, feature: Feature) {
   return false;
 }
 
-function matchesCondition(condition: Condition, feature: Feature): boolean {
+function matchesCondition(
+  condition: Condition,
+  feature: Feature | Geometry
+): boolean {
   switch (condition.type) {
     case "KeyCondition":
       return matchesKeyCondition(condition, feature);
@@ -141,7 +168,7 @@ function matchesCondition(condition: Condition, feature: Feature): boolean {
 }
 function matchesKeyCondition(
   { key, not }: KeyCondition,
-  feature: Feature
+  feature: Feature | Geometry
 ): boolean {
   const bool = Object.keys(feature.getProperties()).some((k) =>
     matchesStringOrRegExp(key, k)
@@ -150,7 +177,7 @@ function matchesKeyCondition(
 }
 function matchesKeyValueCondition(
   { key, value, op }: KeyValueCondition,
-  feature: Feature
+  feature: Feature | Geometry
 ): boolean {
   let bool: boolean;
   const osmValue: string =
@@ -167,7 +194,10 @@ function matchesKeyValueCondition(
   }
   return false;
 }
-function matchesClassCondition({ cls, not }: ClassCondition, feature: Feature) {
+function matchesClassCondition(
+  { cls, not }: ClassCondition,
+  feature: Feature | Geometry
+) {
   const bool = feature.get(`MapCSS-class-${cls}`);
   return not ? !bool : bool;
 }
@@ -175,7 +205,10 @@ function matchesStringOrRegExp(key: string | RegExp, str: string): boolean {
   return key instanceof RegExp ? key.test(str) : key === str;
 }
 
-function evaluateDeclaration(declaration: Declaration, feature: Feature) {
+function evaluateDeclaration(
+  declaration: Declaration,
+  feature: Feature | Geometry
+) {
   if (declaration.type === "SetInstruction") {
     feature.set(`MapCSS-class-${declaration.cls}`, true);
     return {};
@@ -189,7 +222,7 @@ function evaluateDeclaration(declaration: Declaration, feature: Feature) {
 }
 function evaluateExpression(
   expression: Expression,
-  feature: Feature
+  feature: Feature | Geometry
 ): string | number | number[] | undefined {
   if (
     typeof expression === "string" ||
@@ -232,13 +265,13 @@ function evaluateExpression(
     case "tag":
       return feature.getProperties()[String(args[0])];
     case "minx":
-      return feature.getGeometry()?.getExtent()?.[0];
+      return (feature as Feature).getGeometry()?.getExtent()?.[0];
     case "miny":
-      return feature.getGeometry()?.getExtent()?.[1];
+      return (feature as Feature).getGeometry()?.getExtent()?.[1];
     case "maxx":
-      return feature.getGeometry()?.getExtent()?.[2];
+      return (feature as Feature).getGeometry()?.getExtent()?.[2];
     case "maxy":
-      return feature.getGeometry()?.getExtent()?.[3];
+      return (feature as Feature).getGeometry()?.getExtent()?.[3];
   }
   return undefined;
 }

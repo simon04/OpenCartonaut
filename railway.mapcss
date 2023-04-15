@@ -31,15 +31,16 @@ node[name] {
   text-halo-color: white;
   text-halo-opacity: 0.8;
   text-halo-radius: 2;
-  text-offset-x: 5;
   width: 1;
 }
 node[name][railway=station] {
+  text-offset-x: 7;
   font-size: 12pt;
   icon-width: 6;
   text: name;
 }
 node[name][railway=halt] {
+  text-offset-x: 5;
   font-size: 9pt;
   icon-width: 4;
   text: name;
