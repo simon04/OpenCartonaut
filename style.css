@@ -8,7 +8,7 @@ body {
 body {
   font-family: sans-serif;
   display: grid;
-  grid-template: "query mapcss" min-content "buttons buttons" 20px "map map" auto;
+  grid-template: "query mapcss" min-content "executeQuery executeMapCSS" 20px "map map" auto;
 }
 #query {
   min-height: min-content;
@@ -20,10 +20,11 @@ body {
   grid-area: mapcss;
   resize: vertical;
 }
-#buttons {
-  grid-area: buttons;
-  display: grid;
-  grid-auto-flow: column;
+#executeQuery {
+  grid-area: executeQuery;
+}
+#executeMapCSS {
+  grid-area: executeMapCSS;
 }
 button {
   background-color: #6c757d;
