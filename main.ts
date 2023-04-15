@@ -86,6 +86,8 @@ async function queryOverpass(ql: string): Promise<string> {
 }
 
 async function executeQuery(query: string) {
+  const [minx, miny, maxx, maxy] = map.getView().calculateExtent();
+  query = query.replace("{{bbox}}", [miny, minx, maxy, maxx].join(","));
   const xml = await queryOverpass(query);
   const vectorSource = new VectorSource({
     features: new OSMXML().readFeatures(xml),
