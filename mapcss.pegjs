@@ -96,8 +96,8 @@ Identifier "identifier"
   = [a-zA-Z_] [a-zA-Z_0-9-]*
   { return text(); }
 String "string"
-  = "\"" ( [ !#-[\]-~\u0080-\uFFFF] / "\\\"" / "\\\\" )*  "\""
-  { return text().slice(1, -1); }
+  = "\"" string:( [ !#-[\]-~\u0080-\uFFFF] / "\\\"" / "\\\\" / "\\n" / "\\t" )*  "\""
+  { return JSON.parse(text()); }
 RegExp "regex"
   = "/" ("\\/" / [^/])* "/"
   { return new RegExp(text().slice(1, -1)); }

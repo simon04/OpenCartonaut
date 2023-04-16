@@ -1,0 +1,4 @@
+* {
+  string: "foo\"bar\\baz\nnew\ttab";
+  eval: eval("foo" + "\"" + "bar" + "\\" + "baz" + "\n" + "new" + "\t" + "tab");
+}

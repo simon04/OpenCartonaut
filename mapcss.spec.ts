@@ -30,6 +30,16 @@ test("text", () => {
   });
 });
 
+test("string", () => {
+  const mapcss = readFileSync("./mapcss.spec.quoting.mapcss", "utf8");
+  const rules = parseMapCSS(mapcss);
+  const declarations = evaluateRules(rules, undefined);
+  expect(declarations).toEqual({
+    string: 'foo"bar\\baz\nnew\ttab',
+    eval: 'foo"bar\\baz\nnew\ttab',
+  });
+});
+
 test("arithmetic", () => {
   const rules = parseMapCSS("* {value: -2.7 > +3 ? 12 : 2 * (3 + 4);}");
   const declarations = evaluateRules(rules, undefined);
