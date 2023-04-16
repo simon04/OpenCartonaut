@@ -32,15 +32,24 @@ node[name] {
   width: 1;
 }
 node[name][railway=station] {
-  text-offset-x: 7;
   font: "bold 12pt / 1.0 Noto Sans ";
   icon-width: 6;
+  text-offset-x: 9;
   text: name;
 }
 node[name][railway=halt] {
-  text-offset-x: 5;
   font: "bold 9pt / 1.0 Noto Sans ";
   icon-width: 4;
+  text-offset-x: 7;
+  text: name;
+}
+node[abandoned:railway=/station|halt/],
+node[disused:railway=/station|halt/] {
+  fill-color: #00000080;
+  font: "bold 9pt / 1.0 Noto Sans ";
+  icon-width: 4;
+  text-color: #00000080;
+  text-offset-x: 7;
   text: name;
 }
 
