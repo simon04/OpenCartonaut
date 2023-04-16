@@ -1,14 +1,14 @@
 import { Map, View } from "ol";
 import { ScaleLine } from "ol/control";
 import { useGeographic } from "ol/proj";
-import OSMXML from "./OSMXML";
-import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
-import { OSM, Vector as VectorSource } from "ol/source";
-import { evaluateStyle, parseMapCSS } from "./mapcss";
+import { Tile as TileLayer } from "ol/layer";
+import { OSM } from "ol/source";
 import defaultMapCSS from "./default.mapcss?raw";
+import OverpassVectorLayer from "./OverpassVectorLayer";
 import "./style.css";
 
 useGeographic();
+const vectorLayer = new OverpassVectorLayer({});
 
 const queryTextarea = document.getElementById("query") as HTMLTextAreaElement;
 const mapcssTextarea = document.getElementById("mapcss") as HTMLTextAreaElement;
@@ -39,7 +39,7 @@ executeQueryButton.addEventListener("click", executeQueryClick);
 async function executeQueryClick() {
   try {
     executeQueryButton.className = "pending";
-    await executeQuery(queryTextarea.value);
+    await vectorLayer.executeQuery(queryTextarea.value);
     executeQueryButton.className = "success";
     localStorage.setItem("overpass-ol.query", queryTextarea.value);
   } catch (error) {
@@ -57,7 +57,7 @@ executeStyleButton.addEventListener("click", executeStyleClick);
 async function executeStyleClick() {
   try {
     executeStyleButton.className = "pending";
-    await executeStyle(mapcssTextarea.value);
+    await vectorLayer.executeStyle(mapcssTextarea.value);
     executeStyleButton.className = "success";
     localStorage.setItem("overpass-ol.mapcss", mapcssTextarea.value);
   } catch (error) {
@@ -67,9 +67,7 @@ async function executeStyleClick() {
   }
 }
 
-const vectorLayer = new VectorLayer({});
-
-const map = new Map({
+export const map = new Map({
   target: "map",
   layers: [
     new TileLayer({
@@ -81,38 +79,3 @@ const map = new Map({
   view: new View({ center: [0, 0], zoom: 0 }),
   controls: [new ScaleLine()],
 });
-
-async function queryOverpass(ql: string): Promise<string> {
-  const res = await fetch("https://overpass-api.de/api/interpreter", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    },
-    body: "data=" + encodeURIComponent(ql),
-  });
-  if (!res.ok) {
-    const lines = (await res.text()).split("\n");
-    throw new Error(lines.find((line) => line.includes("Error")));
-  }
-  return await res.text();
-}
-
-async function executeQuery(query: string) {
-  const [minx, miny, maxx, maxy] = map.getView().calculateExtent();
-  query = query.replaceAll("{{bbox}}", [miny, minx, maxy, maxx].join(","));
-  const xml = await queryOverpass(query);
-  const vectorSource = new VectorSource({
-    features: new OSMXML().readFeatures(xml),
-  });
-  vectorLayer.setSource(vectorSource);
-  map.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
-}
-
-function executeStyle(mapcss: string) {
-  const rules = parseMapCSS(mapcss);
-  console.info("Parsed MapCSS", rules);
-  const vectorSource = vectorLayer.getSource();
-  vectorSource.forEachFeature((feature) =>
-    feature.setStyle(evaluateStyle(rules, feature))
-  );
-}
