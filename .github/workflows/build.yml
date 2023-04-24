@@ -13,26 +13,15 @@ env:
 
 jobs:
   build:
-    name: Build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Clone Repository
-        uses: actions/checkout@v3
-
-      - name: Set Node.js Version
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16
-
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build
-        run: yarn run build
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - run: yarn install --frozen-lockfile
+      - run: yarn run build
+      - uses: actions/upload-pages-artifact@v1
         with:
           path: ./dist
 
@@ -46,7 +35,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - uses: actions/deploy-pages@v2
         id: deployment
-        uses: actions/deploy-pages@v2
         if: ${{ github.ref == 'refs/heads/master' }}
