@@ -21,6 +21,8 @@ open http://localhost:5173/
 
 - [OpenLayers](https://openlayers.org/)
 - [Overpass API](https://overpass-api.de/)
+- [Vite](https://vitejs.dev/) (build dependency)
+- [Peggy](https://peggyjs.org/) (build dependency to compile MapCSS parser)
 
 ## Author and License
 
