@@ -12,7 +12,7 @@ way[railway=/rail|narrow_gauge/][service!=spur][service!=yard][service!=siding] 
 way[railway][tunnel=yes] {
   dashes: 7, 7;
 }
-way[railway] {
+way[railway]::foreground {
   color: #dc0000;
   opacity: 1;
   width: 4;

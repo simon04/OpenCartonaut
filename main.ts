@@ -14,9 +14,11 @@ const queryTextarea = document.getElementById("query") as HTMLTextAreaElement;
 const mapcssTextarea = document.getElementById("mapcss") as HTMLTextAreaElement;
 
 const defaultQuery = `
-relation(4740507);
-(._;>;);
-out geom;`.trim();
+/// @subpart foreground
+relation(4740507);>;out geom;
+/// @subpart background
+//nwr[railway=rail]({{bbox}});out geom;
+`.trim();
 const store = new (class Store {
   get query(): string {
     return (

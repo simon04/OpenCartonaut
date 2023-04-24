@@ -3,22 +3,35 @@ import { Vector as VectorSource } from "ol/source";
 import { evaluateStyle, parseMapCSS } from "./mapcss";
 import { Geometry } from "ol/geom";
 import OSMXML from "./OSMXML";
+import { splitQuerySubpart } from "./overpass";
 
 export default class OverpassVectorLayer extends VectorLayer<
   VectorSource<Geometry>
 > {
   async executeQuery(query: string) {
     const map = this.getMapInternal();
+    const features = await Promise.all(
+      splitQuerySubpart(query).map(({ query, subpart }) =>
+        this.executeQuery0(query, subpart)
+      )
+    );
+    const vectorSource = new VectorSource({
+      features: features.reduce((a, b) => [...a, ...b]),
+    });
+    this.setSource(vectorSource);
+    map?.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
+  }
+
+  private async executeQuery0(query: string, subpart = "") {
+    const map = this.getMapInternal();
     if (map) {
       const [minx, miny, maxx, maxy] = map.getView().calculateExtent();
       query = query.replaceAll("{{bbox}}", [miny, minx, maxy, maxx].join(","));
     }
     const xml = await queryOverpass(query);
-    const vectorSource = new VectorSource({
-      features: new OSMXML().readFeatures(xml),
-    });
-    this.setSource(vectorSource);
-    map?.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
+    const features = new OSMXML().readFeatures(xml);
+    features.forEach((feature) => feature.set("@subpart", subpart));
+    return features;
   }
 
   executeStyle(mapcss: string) {

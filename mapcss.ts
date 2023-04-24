@@ -133,6 +133,7 @@ function evaluateColor(color: string, opacity: number | undefined) {
 function matchesSelector(selector: Selector, feature: Feature | Geometry) {
   return (
     matchesBase(selector.base, feature) &&
+    (!selector.subpart || selector.subpart === feature.get("@subpart")) &&
     selector.conditions.every((c) => matchesCondition(c, feature))
   );
 }
