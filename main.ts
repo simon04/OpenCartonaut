@@ -17,11 +17,39 @@ const defaultQuery = `
 relation(4740507);
 (._;>;);
 out geom;`.trim();
-queryTextarea.value ||=
-  localStorage.getItem("overpass-ol.query") || defaultQuery;
+const store = new (class Store {
+  get query(): string {
+    return (
+      new URLSearchParams(location.hash.slice(1)).query ||
+      localStorage.getItem("overpass-ol.query") ||
+      defaultQuery
+    );
+  }
+  set query(value: string) {
+    localStorage.setItem("overpass-ol.query", value);
+    this.updateURL();
+  }
+  get mapcss(): string {
+    return (
+      new URLSearchParams(location.hash.slice(1)).mapcss ||
+      localStorage.getItem("overpass-ol.mapcss") ||
+      defaultMapCSS
+    );
+  }
+  set mapcss(value: string) {
+    localStorage.setItem("overpass-ol.mapcss", value);
+    this.updateURL();
+  }
+  updateURL() {
+    location.hash = new URLSearchParams({
+      query: this.query,
+      mapcss: this.mapcss,
+    }).toString();
+  }
+})();
 
-mapcssTextarea.value ||=
-  localStorage.getItem("overpass-ol.mapcss") || defaultMapCSS;
+queryTextarea.value ||= store.query;
+mapcssTextarea.value ||= store.mapcss;
 
 queryTextarea.addEventListener(
   "keydown",
@@ -41,7 +69,7 @@ async function executeQueryClick() {
     executeQueryButton.className = "pending";
     await vectorLayer.executeQuery(queryTextarea.value);
     executeQueryButton.className = "success";
-    localStorage.setItem("overpass-ol.query", queryTextarea.value);
+    store.query = queryTextarea.value;
   } catch (error) {
     executeQueryButton.title = error?.message || String(error);
     executeQueryButton.className = "error";
@@ -59,7 +87,7 @@ async function executeStyleClick() {
     executeStyleButton.className = "pending";
     await vectorLayer.executeStyle(mapcssTextarea.value);
     executeStyleButton.className = "success";
-    localStorage.setItem("overpass-ol.mapcss", mapcssTextarea.value);
+    store.mapcss = mapcssTextarea.value;
   } catch (error) {
     executeStyleButton.title = error?.message || String(error);
     executeStyleButton.className = "error";
