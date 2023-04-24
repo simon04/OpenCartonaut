@@ -1,18 +1,26 @@
-# OpenLayers + Vite
+# OpenCartonaut
 
-This example demonstrates how the `ol` package can be used with [Vite](https://vitejs.dev/).
+Query and render OpenStreetMap data using the Overpass API, OpenLayers and MapCSS
 
-To get started, run the following (requires Node 14+):
+## Usage
 
-    npx create-ol-app my-app --template vite
+1. Query Overpass API using [Overpass QL](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL)
+2. Style map using [MapCSS](https://wiki.openstreetmap.org/wiki/MapCSS)
 
-Then change into your new `my-app` directory and start a development server (available at http://localhost:5173):
+## Contributing
 
-    cd my-app
-    npm start
+```sh
+yarn
+yarn dev
+open http://localhost:5173/
+```
 
-To generate a build ready for production:
+## Dependencies
 
-    npm run build
+- [OpenLayers](https://openlayers.org/)
+- [Overpass API](https://overpass-api.de/)
 
-Then deploy the contents of the `dist` directory to your server.  You can also run `npm run serve` to serve the results of the `dist` directory for preview.
+## Author and License
+
+- Author: simon04
+- License: [GPL v3](https://www.gnu.org/licenses/gpl.html)
