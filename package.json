@@ -3,6 +3,14 @@
   "private": true,
   "license": "GPL-3.0-or-later",
   "version": "1.0.0",
+  "homepage": "https://simon04.github.io/OpenCartonaut/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simon04/OpenCartonaut.git"
+  },
+  "bugs": {
+    "url": "https://github.com/simon04/OpenCartonaut/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build --base ./",
