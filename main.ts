@@ -6,6 +6,7 @@ import { OSM } from "ol/source";
 import defaultMapCSS from "./default.mapcss?raw";
 import OverpassVectorLayer from "./OverpassVectorLayer";
 import "./style.css";
+import { evaluateMeta } from "./mapcss";
 
 useGeographic();
 const vectorLayer = new OverpassVectorLayer({});
@@ -87,9 +88,22 @@ executeStyleButton.addEventListener("click", executeStyleClick);
 async function executeStyleClick() {
   try {
     executeStyleButton.className = "pending";
-    await vectorLayer.executeStyle(mapcssTextarea.value);
+    const rules = vectorLayer.executeStyle(mapcssTextarea.value);
     executeStyleButton.className = "success";
     store.mapcss = mapcssTextarea.value;
+
+    const meta = evaluateMeta(rules);
+    map.getLayers().forEach((layer) => {
+      if (!(layer instanceof TileLayer)) return;
+      layer.setOpacity(typeof meta.opacity === "number" ? meta.opacity : 1.0);
+      layer.setBackground(
+        typeof meta["fill-color"] === "string" ? meta["fill-color"] : undefined
+      );
+      document.body.style.setProperty(
+        "--ol-layer-osm-filter",
+        meta["fill-filter"]
+      );
+    });
   } catch (error) {
     executeStyleButton.title = error?.message || String(error);
     executeStyleButton.className = "error";
@@ -101,8 +115,8 @@ export const map = new Map({
   target: "map",
   layers: [
     new TileLayer({
-      opacity: 0.8,
       source: new OSM(),
+      className: "ol-layer-osm",
     }),
     vectorLayer,
   ],

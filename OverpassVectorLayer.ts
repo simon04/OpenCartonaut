@@ -1,6 +1,6 @@
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
-import { evaluateStyle, parseMapCSS } from "./mapcss";
+import { type Rule, evaluateStyle, parseMapCSS } from "./mapcss";
 import { Geometry } from "ol/geom";
 import OSMXML from "./OSMXML";
 import { splitQuerySubpart } from "./overpass";
@@ -34,13 +34,14 @@ export default class OverpassVectorLayer extends VectorLayer<
     return features;
   }
 
-  executeStyle(mapcss: string) {
+  executeStyle(mapcss: string): Rule[] {
     const rules = parseMapCSS(mapcss);
     console.info("Parsed MapCSS", rules);
     const vectorSource = this.getSource();
     vectorSource?.forEachFeature((feature) =>
       feature.setStyle(evaluateStyle(rules, feature))
     );
+    return rules;
   }
 }
 

@@ -1,5 +1,5 @@
 import MapCSS from "./mapcss.pegjs";
-import type { Feature } from "ol";
+import { Feature } from "ol";
 import { Geometry } from "ol/geom";
 import { fromString as colorFromString } from "ol/color";
 import { Fill, Stroke, Style, Text } from "ol/style";
@@ -99,9 +99,15 @@ export function evaluateStyle(
   });
 }
 
+const meta = new Feature();
+
+export function evaluateMeta(rules: Rule[]): EvaluatedDeclarations {
+  return evaluateRules(rules, meta);
+}
+
 export function evaluateRules(
   rules: Rule[],
-  feature: Geometry | Feature<Geometry>
+  feature: Feature | Geometry
 ): EvaluatedDeclarations {
   const declarations: EvaluatedDeclarations = {};
   rules.forEach((rule) => evaluateRule(rule, feature, declarations));
@@ -111,9 +117,8 @@ export function evaluateRules(
 function evaluateRule(
   rule: Rule,
   feature: Feature | Geometry,
-  declarations?: EvaluatedDeclarations
-): EvaluatedDeclarations {
-  declarations ||= {};
+  declarations: EvaluatedDeclarations
+) {
   const matches = rule.selectors.some((selector) =>
     matchesSelector(selector, feature)
   );
@@ -121,7 +126,6 @@ function evaluateRule(
   rule.declaration.forEach((declaration) =>
     Object.assign(declarations, evaluateDeclaration(declaration, feature))
   );
-  return declarations;
 }
 
 function evaluateColor(color: string, opacity: number | undefined) {
@@ -139,7 +143,9 @@ function matchesSelector(selector: Selector, feature: Feature | Geometry) {
 }
 
 function matchesBase(base: Base, feature: Feature | Geometry) {
-  if (base === "*") {
+  if (feature === meta) {
+    return base === "meta";
+  } else if (base === "*") {
     return true;
   }
   const type =

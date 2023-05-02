@@ -1,5 +1,9 @@
 @import "node_modules/ol/ol.css";
 
+:root {
+  --ol-layer-osm-filter: none;
+}
+
 html,
 body {
   margin: 0;
@@ -45,4 +49,7 @@ button.error {
 }
 #map {
   grid-area: map;
+}
+.ol-layer-osm {
+  filter: var(--ol-layer-osm-filter);
 }
