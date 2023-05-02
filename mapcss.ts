@@ -99,10 +99,10 @@ export function evaluateStyle(
   });
 }
 
-const meta = new Feature();
+const canvas = new Feature();
 
-export function evaluateMeta(rules: Rule[]): EvaluatedDeclarations {
-  return evaluateRules(rules, meta);
+export function evaluateCanvas(rules: Rule[]): EvaluatedDeclarations {
+  return evaluateRules(rules, canvas);
 }
 
 export function evaluateRules(
@@ -143,8 +143,8 @@ function matchesSelector(selector: Selector, feature: Feature | Geometry) {
 }
 
 function matchesBase(base: Base, feature: Feature | Geometry) {
-  if (feature === meta) {
-    return base === "meta";
+  if (feature === canvas) {
+    return base === "canvas";
   } else if (base === "*") {
     return true;
   }

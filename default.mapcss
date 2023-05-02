@@ -1,7 +1,6 @@
-meta {
+canvas {
   fill-image: "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
   opacity: 0.8;
-  // https://developer.mozilla.org/en-US/docs/Web/CSS/filter
   fill-filter: "grayscale(0.0)";
 }
 node,

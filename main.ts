@@ -6,7 +6,7 @@ import { OSM } from "ol/source";
 import defaultMapCSS from "./default.mapcss?raw";
 import OverpassVectorLayer from "./OverpassVectorLayer";
 import "./style.css";
-import { evaluateMeta } from "./mapcss";
+import { evaluateCanvas } from "./mapcss";
 
 useGeographic();
 const vectorLayer = new OverpassVectorLayer({});
@@ -92,20 +92,24 @@ async function executeStyleClick() {
     executeStyleButton.className = "success";
     store.mapcss = mapcssTextarea.value;
 
-    const meta = evaluateMeta(rules);
+    const canvas = evaluateCanvas(rules);
     map.getLayers().forEach((layer) => {
       if (!(layer instanceof TileLayer)) return;
-      layer.setOpacity(typeof meta.opacity === "number" ? meta.opacity : 1.0);
+      layer.setOpacity(
+        typeof canvas.opacity === "number" ? canvas.opacity : 1.0
+      );
       layer.setBackground(
-        typeof meta["fill-color"] === "string" ? meta["fill-color"] : undefined
+        typeof canvas["fill-color"] === "string"
+          ? canvas["fill-color"]
+          : undefined
       );
       document.body.style.setProperty(
         "--ol-layer-osm-filter",
-        meta["fill-filter"]
+        canvas["fill-filter"]
       );
       const source = layer.getSource() as OSM;
-      typeof meta["fill-image"] === "string" &&
-        source.setUrl(meta["fill-image"]);
+      typeof canvas["fill-image"] === "string" &&
+        source.setUrl(canvas["fill-image"]);
     });
   } catch (error) {
     executeStyleButton.title = error?.message || String(error);
