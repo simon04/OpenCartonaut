@@ -4,6 +4,8 @@ import { Geometry } from "ol/geom";
 import { fromString as colorFromString } from "ol/color";
 import { Fill, Stroke, Style, Text } from "ol/style";
 import CircleStyle from "ol/style/Circle";
+import { type Tile as TileLayer } from "ol/layer";
+import { type OSM } from "ol/source";
 
 export const SyntaxError: typeof Error = MapCSS.SyntaxError;
 
@@ -101,8 +103,26 @@ export function evaluateStyle(
 
 const canvas = new Feature();
 
-export function evaluateCanvas(rules: Rule[]): EvaluatedDeclarations {
-  return evaluateRules(rules, canvas);
+export function evaluateCanvas(
+  rules: Rule[],
+  layer: TileLayer<OSM>
+): EvaluatedDeclarations {
+  const declarations = evaluateRules(rules, canvas);
+  layer.setOpacity(
+    typeof declarations.opacity === "number" ? declarations.opacity : 1.0
+  );
+  layer.setBackground(
+    typeof declarations["fill-color"] === "string"
+      ? declarations["fill-color"]
+      : undefined
+  );
+  document.body.style.setProperty(
+    "--ol-layer-osm-filter",
+    declarations["fill-filter"]
+  );
+  typeof declarations["fill-image"] === "string" &&
+    layer.getSource()?.setUrl(declarations["fill-image"]);
+  return declarations;
 }
 
 export function evaluateRules(

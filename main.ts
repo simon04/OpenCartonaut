@@ -10,6 +10,10 @@ import { evaluateCanvas } from "./mapcss";
 
 useGeographic();
 const vectorLayer = new OverpassVectorLayer({});
+const tileLayer = new TileLayer({
+  source: new OSM(),
+  className: "ol-layer-osm",
+});
 
 const queryTextarea = document.getElementById("query") as HTMLTextAreaElement;
 const mapcssTextarea = document.getElementById("mapcss") as HTMLTextAreaElement;
@@ -91,26 +95,7 @@ async function executeStyleClick() {
     const rules = vectorLayer.executeStyle(mapcssTextarea.value);
     executeStyleButton.className = "success";
     store.mapcss = mapcssTextarea.value;
-
-    const canvas = evaluateCanvas(rules);
-    map.getLayers().forEach((layer) => {
-      if (!(layer instanceof TileLayer)) return;
-      layer.setOpacity(
-        typeof canvas.opacity === "number" ? canvas.opacity : 1.0
-      );
-      layer.setBackground(
-        typeof canvas["fill-color"] === "string"
-          ? canvas["fill-color"]
-          : undefined
-      );
-      document.body.style.setProperty(
-        "--ol-layer-osm-filter",
-        canvas["fill-filter"]
-      );
-      const source = layer.getSource() as OSM;
-      typeof canvas["fill-image"] === "string" &&
-        source.setUrl(canvas["fill-image"]);
-    });
+    evaluateCanvas(rules, tileLayer);
   } catch (error) {
     executeStyleButton.title = error?.message || String(error);
     executeStyleButton.className = "error";
@@ -120,13 +105,7 @@ async function executeStyleClick() {
 
 export const map = new Map({
   target: "map",
-  layers: [
-    new TileLayer({
-      source: new OSM(),
-      className: "ol-layer-osm",
-    }),
-    vectorLayer,
-  ],
+  layers: [tileLayer, vectorLayer],
   view: new View({ center: [0, 0], zoom: 0 }),
   controls: [new ScaleLine()],
 });
