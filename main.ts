@@ -103,6 +103,9 @@ async function executeStyleClick() {
         "--ol-layer-osm-filter",
         meta["fill-filter"]
       );
+      const source = layer.getSource() as OSM;
+      typeof meta["fill-image"] === "string" &&
+        source.setUrl(meta["fill-image"]);
     });
   } catch (error) {
     executeStyleButton.title = error?.message || String(error);
