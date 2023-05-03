@@ -27,7 +27,7 @@ relation(4740507);>;out geom;
 const store = new (class Store {
   get query(): string {
     return (
-      new URLSearchParams(location.hash.slice(1)).query ||
+      new URLSearchParams(location.hash.slice(1)).get("query") ||
       localStorage.getItem("overpass-ol.query") ||
       defaultQuery
     );
@@ -38,7 +38,7 @@ const store = new (class Store {
   }
   get mapcss(): string {
     return (
-      new URLSearchParams(location.hash.slice(1)).mapcss ||
+      new URLSearchParams(location.hash.slice(1)).get("mapcss") ||
       localStorage.getItem("overpass-ol.mapcss") ||
       defaultMapCSS
     );
