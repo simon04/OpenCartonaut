@@ -26,22 +26,14 @@ relation(4740507);>;out geom;
 `.trim();
 const store = new (class Store {
   get query(): string {
-    return (
-      new URLSearchParams(location.hash.slice(1)).get("query") ||
-      localStorage.getItem("overpass-ol.query") ||
-      defaultQuery
-    );
+    return localStorage.getItem("overpass-ol.query") || defaultQuery;
   }
   set query(value: string) {
     localStorage.setItem("overpass-ol.query", value);
     this.updateURL();
   }
   get mapcss(): string {
-    return (
-      new URLSearchParams(location.hash.slice(1)).get("mapcss") ||
-      localStorage.getItem("overpass-ol.mapcss") ||
-      defaultMapCSS
-    );
+    return localStorage.getItem("overpass-ol.mapcss") || defaultMapCSS;
   }
   set mapcss(value: string) {
     localStorage.setItem("overpass-ol.mapcss", value);
@@ -54,6 +46,10 @@ const store = new (class Store {
     }).toString();
   }
 })();
+
+const searchParams = new URLSearchParams(location.hash.slice(1));
+store.query = searchParams.get("query") || store.query;
+store.mapcss = searchParams.get("mapcss") || store.mapcss;
 
 queryTextarea.value ||= store.query;
 mapcssTextarea.value ||= store.mapcss;
