@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@types/geojson": "^7946.0.10",
-    "bun-types": "^0.5.8",
+    "bun-types": "^0.6.8",
     "peggy": "^3.0.2",
     "prettier": "^2.8.8",
     "vite": "^4.3.1"
