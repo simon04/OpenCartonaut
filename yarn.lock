@@ -151,10 +151,10 @@
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.10.tgz#6dfbf5ea17142f7f9a043809f1cd4c448cb68249"
   integrity sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==
 
-bun-types@^0.5.8:
-  version "0.5.8"
-  resolved "https://registry.yarnpkg.com/bun-types/-/bun-types-0.5.8.tgz#953722062116e0b87ce00e4e4cc807673926b834"
-  integrity sha512-VHwD0MAHo3wraYAeqTWH2NDmXOdGfC3wWWOnZvK93ytI6yq/LkgsCjDudWNmN7MlfPvJb2zoLMnkzhjxNwLsLw==
+bun-types@^0.6.9:
+  version "0.6.9"
+  resolved "https://registry.yarnpkg.com/bun-types/-/bun-types-0.6.9.tgz#543d92df6db465c252a609eb3127a7a825fafc4d"
+  integrity sha512-qsxwgWWl6qBrHhj+c8QKte+Qyn8MwQweCp7gR51dfw6G43z+PmNk+ipx3xJj/EIU8i9QPyikriZ/tOeEoYPKyw==
 
 commander@^10.0.0:
   version "10.0.0"
