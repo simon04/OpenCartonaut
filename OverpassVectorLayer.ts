@@ -12,8 +12,8 @@ export default class OverpassVectorLayer extends VectorLayer<
     const map = this.getMapInternal();
     const features = await Promise.all(
       splitQuerySubpart(query).map(({ query, subpart }) =>
-        this.executeQuery0(query, subpart)
-      )
+        this.executeQuery0(query, subpart),
+      ),
     );
     const vectorSource = new VectorSource({
       features: features.reduce((a, b) => [...a, ...b]),
@@ -39,7 +39,7 @@ export default class OverpassVectorLayer extends VectorLayer<
     console.info("Parsed MapCSS", rules);
     const vectorSource = this.getSource();
     vectorSource?.forEachFeature((feature) =>
-      feature.setStyle(evaluateStyle(rules, feature))
+      feature.setStyle(evaluateStyle(rules, feature)),
     );
     return rules;
   }

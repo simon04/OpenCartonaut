@@ -56,15 +56,15 @@ mapcssTextarea.value ||= store.mapcss;
 
 queryTextarea.addEventListener(
   "keydown",
-  (e) => (e.ctrlKey || e.metaKey) && e.key === "Enter" && executeQueryClick()
+  (e) => (e.ctrlKey || e.metaKey) && e.key === "Enter" && executeQueryClick(),
 );
 mapcssTextarea.addEventListener(
   "keydown",
-  (e) => (e.ctrlKey || e.metaKey) && e.key === "Enter" && executeStyleClick()
+  (e) => (e.ctrlKey || e.metaKey) && e.key === "Enter" && executeStyleClick(),
 );
 
 const executeQueryButton = document.getElementById(
-  "executeQuery"
+  "executeQuery",
 ) as HTMLButtonElement;
 executeQueryButton.addEventListener("click", executeQueryClick);
 async function executeQueryClick() {
@@ -82,7 +82,7 @@ async function executeQueryClick() {
 }
 
 const executeStyleButton = document.getElementById(
-  "executeStyle"
+  "executeStyle",
 ) as HTMLButtonElement;
 executeStyleButton.addEventListener("click", executeStyleClick);
 async function executeStyleClick() {

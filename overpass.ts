@@ -1,5 +1,5 @@
 export function splitQuerySubpart(
-  query: string
+  query: string,
 ): { query: string; subpart: string | undefined; start: number }[] {
   const regexp = /\/\/\/\s*@subpart (?<subpart>[^\n]+)/dg;
   if (!query.match(regexp)) {
@@ -14,7 +14,7 @@ export function splitQuerySubpart(
         subpart: match.groups?.subpart,
         start,
       };
-    }
+    },
   );
   if (subparts[0]?.start > 0) {
     const first = query.slice(0, subparts[0]?.start).trim();

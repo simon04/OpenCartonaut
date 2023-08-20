@@ -19,7 +19,7 @@ type EvaluatedDeclarations = Partial<
 
 export function evaluateStyle(
   rules: Rule[],
-  feature: Feature | Geometry
+  feature: Feature | Geometry,
 ): Style | undefined {
   const declarations: EvaluatedDeclarations = evaluateRules(rules, feature);
 
@@ -31,7 +31,7 @@ export function evaluateStyle(
     ? new Fill({
         color: evaluateColor(
           declarations["fill-color"] as string,
-          declarations["fill-opacity"] as number
+          declarations["fill-opacity"] as number,
         ),
       })
     : undefined;
@@ -39,7 +39,7 @@ export function evaluateStyle(
     ? new Stroke({
         color: evaluateColor(
           declarations.color as string,
-          declarations.opacity as number
+          declarations.opacity as number,
         ),
         width: declarations.width as number,
         lineDash: declarations.dashes as number[],
@@ -58,14 +58,14 @@ export function evaluateStyle(
         fill: new Fill({
           color: evaluateColor(
             declarations["text-color"] as string,
-            declarations["text-opacity"] as number
+            declarations["text-opacity"] as number,
           ),
         }),
         stroke: declarations["text-halo-radius"]
           ? new Stroke({
               color: evaluateColor(
                 declarations["text-halo-color"] as string,
-                declarations["text-halo-opacity"] as number
+                declarations["text-halo-opacity"] as number,
               ),
               width: declarations["text-halo-radius"] as number,
             })
@@ -105,20 +105,20 @@ const canvas = new Feature();
 
 export function evaluateCanvas(
   rules: Rule[],
-  layer: TileLayer<OSM>
+  layer: TileLayer<OSM>,
 ): EvaluatedDeclarations {
   const declarations = evaluateRules(rules, canvas);
   layer.setOpacity(
-    typeof declarations.opacity === "number" ? declarations.opacity : 1.0
+    typeof declarations.opacity === "number" ? declarations.opacity : 1.0,
   );
   layer.setBackground(
     typeof declarations["fill-color"] === "string"
       ? declarations["fill-color"]
-      : undefined
+      : undefined,
   );
   document.body.style.setProperty(
     "--ol-layer-osm-filter",
-    declarations["fill-filter"]
+    declarations["fill-filter"],
   );
   typeof declarations["fill-image"] === "string" &&
     layer.getSource()?.setUrl(declarations["fill-image"]);
@@ -127,7 +127,7 @@ export function evaluateCanvas(
 
 export function evaluateRules(
   rules: Rule[],
-  feature: Feature | Geometry
+  feature: Feature | Geometry,
 ): EvaluatedDeclarations {
   const declarations: EvaluatedDeclarations = {};
   rules.forEach((rule) => evaluateRule(rule, feature, declarations));
@@ -137,14 +137,14 @@ export function evaluateRules(
 function evaluateRule(
   rule: Rule,
   feature: Feature | Geometry,
-  declarations: EvaluatedDeclarations
+  declarations: EvaluatedDeclarations,
 ) {
   const matches = rule.selectors.some((selector) =>
-    matchesSelector(selector, feature)
+    matchesSelector(selector, feature),
   );
   if (!matches) return;
   rule.declaration.forEach((declaration) =>
-    Object.assign(declarations, evaluateDeclaration(declaration, feature))
+    Object.assign(declarations, evaluateDeclaration(declaration, feature)),
   );
 }
 
@@ -186,7 +186,7 @@ function matchesBase(base: Base, feature: Feature | Geometry) {
 
 function matchesCondition(
   condition: Condition,
-  feature: Feature | Geometry
+  feature: Feature | Geometry,
 ): boolean {
   switch (condition.type) {
     case "KeyCondition":
@@ -200,16 +200,16 @@ function matchesCondition(
 }
 function matchesKeyCondition(
   { key, not }: KeyCondition,
-  feature: Feature | Geometry
+  feature: Feature | Geometry,
 ): boolean {
   const bool = Object.keys(feature.getProperties()).some((k) =>
-    matchesStringOrRegExp(key, k)
+    matchesStringOrRegExp(key, k),
   );
   return not ? !bool : bool;
 }
 function matchesKeyValueCondition(
   { key, value, op }: KeyValueCondition,
-  feature: Feature | Geometry
+  feature: Feature | Geometry,
 ): boolean {
   let bool: boolean;
   const osmValue: string =
@@ -228,7 +228,7 @@ function matchesKeyValueCondition(
 }
 function matchesClassCondition(
   { cls, not }: ClassCondition,
-  feature: Feature | Geometry
+  feature: Feature | Geometry,
 ) {
   const bool = feature.get(`MapCSS-class-${cls}`);
   return not ? !bool : bool;
@@ -239,7 +239,7 @@ function matchesStringOrRegExp(key: string | RegExp, str: string): boolean {
 
 function evaluateDeclaration(
   declaration: Declaration,
-  feature: Feature | Geometry
+  feature: Feature | Geometry,
 ) {
   if (declaration.type === "SetInstruction") {
     feature.set(`MapCSS-class-${declaration.cls}`, true);
@@ -254,7 +254,7 @@ function evaluateDeclaration(
 }
 function evaluateExpression(
   expression: Expression,
-  feature: Feature | Geometry
+  feature: Feature | Geometry,
 ): string | number | number[] | undefined {
   if (
     typeof expression === "string" ||
