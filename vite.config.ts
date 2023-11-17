@@ -1,5 +1,5 @@
 import { type Plugin, defineConfig, createFilter } from "vite";
-import { type ParserBuildOptions, generate } from "peggy";
+import _peggy from "peggy";
 
 export default defineConfig({
   build: {
@@ -8,14 +8,14 @@ export default defineConfig({
   plugins: [peggy()],
 });
 
-function peggy(options: ParserBuildOptions = {}): Plugin {
+function peggy(options: _peggy.ParserBuildOptions = {}): Plugin {
   return {
     name: "peggy",
     transform(grammar, id) {
       const { include = ["*.pegjs", "**/*.pegjs"], exclude } = options;
       const filter = createFilter(include, exclude);
       if (!filter(id)) return null;
-      const code = generate(grammar, { output: "source", ...options });
+      const code = _peggy.generate(grammar, { output: "source", ...options });
       return {
         code: `export default ${code};`,
         map: { mappings: "" },
