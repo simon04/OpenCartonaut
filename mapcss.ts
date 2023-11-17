@@ -79,6 +79,7 @@ export function evaluateStyle(
           : undefined,
         rotation: declarations["text-rotation"] as number,
         placement: declarations["text-position"] as "point" | "line",
+        overflow: true,
         textAlign: declarations["text-anchor-horizontal"] as CanvasTextAlign,
         textBaseline: declarations[
           "text-anchor-vertical"
