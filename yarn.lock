@@ -348,7 +348,7 @@ __metadata:
   dependencies:
     "@types/geojson": "npm:^7946.0.10"
     bun-types: "npm:^0.5.8"
-    ol: "npm:8.2.0"
+    ol: "npm:9.2.4"
     peggy: "npm:^3.0.2"
     prettier: "npm:^3.0.2"
     vite: "npm:^5.3.1"
@@ -1068,9 +1068,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ol@npm:8.2.0":
-  version: 8.2.0
-  resolution: "ol@npm:8.2.0"
+"ol@npm:9.2.4":
+  version: 9.2.4
+  resolution: "ol@npm:9.2.4"
   dependencies:
     color-rgba: "npm:^3.0.0"
     color-space: "npm:^2.0.1"
@@ -1078,7 +1078,7 @@ __metadata:
     geotiff: "npm:^2.0.7"
     pbf: "npm:3.2.1"
     rbush: "npm:^3.0.1"
-  checksum: 10c0/46e1cf2b73da2ab1b30a7e596e2ce2d2c8891e3abf1a3274f933dcf2d76ff0c38ba0a2087a681997977f688a998d933e818975db8a7dfe198b9e2639bdd2d0df
+  checksum: 10c0/6eb288d03908ef7276760011867836b737b7508c56a966013dbee6184e4c6b54a458c2efd2dfec08aa86b5cffc3d90488746737b64ef2c05b772ad6ee9bbbfd5
   languageName: node
   linkType: hard
 
