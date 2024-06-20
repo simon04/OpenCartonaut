@@ -23,6 +23,18 @@ const defaultQuery = `
 relation(4740507);>;out geom;
 /// @subpart background
 //nwr[railway=rail]({{bbox}});out geom;
+/// @subpart town
+/// @type geojson
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Gars am Kamp", "place": "town" },
+      "geometry": { "type": "Point", "coordinates": [15.6594592, 48.5951053] }
+    }
+  ]
+}
 `.trim();
 const store = new (class Store {
   get query(): string {

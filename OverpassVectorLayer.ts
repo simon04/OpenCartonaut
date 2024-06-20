@@ -2,6 +2,7 @@ import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import { type Rule, evaluateStyle, parseMapCSS } from "./mapcss";
 import { Geometry } from "ol/geom";
+import GeoJSON from "ol/format/GeoJSON";
 import OSMXML from "./OSMXML";
 import { splitQuerySubpart } from "./overpass";
 
@@ -12,14 +13,22 @@ export default class OverpassVectorLayer extends VectorLayer<
     const map = this.getMapInternal();
     const features = await Promise.all(
       splitQuerySubpart(query).map(({ query, subpart }) =>
-        this.executeQuery0(query, subpart),
+        /\/\/\/\s*@type geojson/dg.test(query)
+          ? this.readGeoJSON(query.replace(/\/\/\/.*/dg, ""), subpart)
+          : this.executeQuery0(query, subpart),
       ),
     );
     const vectorSource = new VectorSource({
-      features: features.reduce((a, b) => [...a, ...b]),
+      features: features.flat(),
     });
     this.setSource(vectorSource);
     map?.getView().fit(vectorSource.getExtent(), { padding: [24, 24, 24, 24] });
+  }
+
+  private readGeoJSON(query: string, subpart = "") {
+    const features = new GeoJSON().readFeatures(query);
+    features.forEach((feature) => feature.set("@subpart", subpart));
+    return features;
   }
 
   private async executeQuery0(query: string, subpart = "") {

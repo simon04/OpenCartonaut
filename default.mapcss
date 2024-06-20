@@ -50,3 +50,8 @@ relation:active {
   color: #f50;
   fill-color: #f50;
 }
+node[place=town] {
+  font: "bold 11pt / 1.0 sans-serif";
+  text-color: black;
+  text: name;
+}
