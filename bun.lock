@@ -1,0 +1,91 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "OpenCartonaut",
+      "dependencies": {
+        "ol": "9.2.4",
+      },
+      "devDependencies": {
+        "@types/geojson": "^7946.0.10",
+        "bun-types": "^0.5.8",
+        "peggy": "^3.0.2",
+        "prettier": "^3.0.2",
+        "vite": "^5.3.1",
+      },
+    },
+  },
+  "packages": {
+    "@esbuild/linux-x64": ["@esbuild/linux-x64@0.21.5", "", { "os": "linux", "cpu": "x64" }, ""],
+
+    "@petamoriken/float16": ["@petamoriken/float16@3.8.0", "", {}, ""],
+
+    "@rollup/rollup-linux-x64-gnu": ["@rollup/rollup-linux-x64-gnu@4.18.0", "", { "os": "linux", "cpu": "x64" }, ""],
+
+    "@types/estree": ["@types/estree@1.0.5", "", {}, ""],
+
+    "@types/geojson": ["@types/geojson@7946.0.10", "", {}, ""],
+
+    "bun-types": ["bun-types@0.5.8", "", {}, ""],
+
+    "color-name": ["color-name@1.1.4", "", {}, ""],
+
+    "color-parse": ["color-parse@2.0.0", "", { "dependencies": { "color-name": "^1.0.0" } }, ""],
+
+    "color-rgba": ["color-rgba@3.0.0", "", { "dependencies": { "color-parse": "^2.0.0", "color-space": "^2.0.0" } }, ""],
+
+    "color-space": ["color-space@2.0.1", "", {}, ""],
+
+    "commander": ["commander@10.0.0", "", {}, ""],
+
+    "earcut": ["earcut@2.2.4", "", {}, ""],
+
+    "esbuild": ["esbuild@0.21.5", "", { "optionalDependencies": { "@esbuild/linux-x64": "0.21.5" }, "bin": "bin/esbuild" }, ""],
+
+    "geotiff": ["geotiff@2.0.7", "", { "dependencies": { "@petamoriken/float16": "^3.4.7", "lerc": "^3.0.0", "pako": "^2.0.4", "parse-headers": "^2.0.2", "quick-lru": "^6.1.1", "web-worker": "^1.2.0", "xml-utils": "^1.0.2" } }, ""],
+
+    "ieee754": ["ieee754@1.2.1", "", {}, ""],
+
+    "lerc": ["lerc@3.0.0", "", {}, ""],
+
+    "nanoid": ["nanoid@3.3.7", "", { "bin": "bin/nanoid.cjs" }, ""],
+
+    "ol": ["ol@9.2.4", "", { "dependencies": { "color-rgba": "^3.0.0", "color-space": "^2.0.1", "earcut": "^2.2.3", "geotiff": "^2.0.7", "pbf": "3.2.1", "rbush": "^3.0.1" } }, ""],
+
+    "pako": ["pako@2.1.0", "", {}, ""],
+
+    "parse-headers": ["parse-headers@2.0.5", "", {}, ""],
+
+    "pbf": ["pbf@3.2.1", "", { "dependencies": { "ieee754": "^1.1.12", "resolve-protobuf-schema": "^2.1.0" }, "bin": "bin/pbf" }, ""],
+
+    "peggy": ["peggy@3.0.2", "", { "dependencies": { "commander": "^10.0.0", "source-map-generator": "0.8.0" }, "bin": "bin/peggy.js" }, ""],
+
+    "picocolors": ["picocolors@1.0.0", "", {}, ""],
+
+    "postcss": ["postcss@8.4.38", "", { "dependencies": { "nanoid": "^3.3.7", "picocolors": "^1.0.0", "source-map-js": "^1.2.0" } }, ""],
+
+    "prettier": ["prettier@3.0.2", "", { "bin": "bin/prettier.cjs" }, ""],
+
+    "protocol-buffers-schema": ["protocol-buffers-schema@3.6.0", "", {}, ""],
+
+    "quick-lru": ["quick-lru@6.1.1", "", {}, ""],
+
+    "quickselect": ["quickselect@2.0.0", "", {}, ""],
+
+    "rbush": ["rbush@3.0.1", "", { "dependencies": { "quickselect": "^2.0.0" } }, ""],
+
+    "resolve-protobuf-schema": ["resolve-protobuf-schema@2.1.0", "", { "dependencies": { "protocol-buffers-schema": "^3.3.1" } }, ""],
+
+    "rollup": ["rollup@4.18.0", "", { "dependencies": { "@types/estree": "1.0.5" }, "optionalDependencies": { "@rollup/rollup-linux-x64-gnu": "4.18.0" }, "bin": "dist/bin/rollup" }, ""],
+
+    "source-map-generator": ["source-map-generator@0.8.0", "", {}, ""],
+
+    "source-map-js": ["source-map-js@1.2.0", "", {}, ""],
+
+    "vite": ["vite@5.3.1", "", { "dependencies": { "esbuild": "^0.21.3", "postcss": "^8.4.38", "rollup": "^4.13.0" }, "peerDependencies": { "@types/node": "^18.0.0 || >=20.0.0", "less": "*", "lightningcss": "^1.21.0", "sass": "*", "stylus": "*", "sugarss": "*", "terser": "^5.4.0" }, "optionalPeers": ["@types/node", "less", "lightningcss", "sass", "stylus", "sugarss", "terser"], "bin": "bin/vite.js" }, ""],
+
+    "web-worker": ["web-worker@1.2.0", "", {}, ""],
+
+    "xml-utils": ["xml-utils@1.7.0", "", {}, ""],
+  }
+}

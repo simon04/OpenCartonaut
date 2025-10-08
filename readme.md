@@ -12,8 +12,8 @@ https://simon04.github.io/OpenCartonaut/
 ## Contributing
 
 ```sh
-yarn
-yarn dev
+bun install
+bun run dev
 open http://localhost:5173/
 ```
 
