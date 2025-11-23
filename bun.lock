@@ -11,7 +11,7 @@
         "@types/geojson": "^7946.0.10",
         "bun-types": "^0.5.8",
         "peggy": "^5.0.6",
-        "prettier": "^3.0.2",
+        "prettier": "^3.6.2",
         "rolldown-vite": "^7.2.7",
       },
     },

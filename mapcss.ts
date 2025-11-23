@@ -75,8 +75,8 @@ export function evaluateStyle(
         font: declarations["font"]
           ? String(declarations["font"])
           : declarations["font-size"] && declarations["font-family"]
-          ? `${declarations["font-size"]}px ${declarations["font-family"]}`
-          : undefined,
+            ? `${declarations["font-size"]}px ${declarations["font-family"]}`
+            : undefined,
         rotation: declarations["text-rotation"] as number,
         placement: declarations["text-position"] as "point" | "line",
         overflow: true,
