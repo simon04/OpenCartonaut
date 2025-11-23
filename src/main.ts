@@ -5,7 +5,7 @@ import { Tile as TileLayer } from "ol/layer";
 import { OSM } from "ol/source";
 import defaultMapCSS from "./default.mapcss?raw";
 import OverpassVectorLayer from "./OverpassVectorLayer";
-import "./style.css";
+import "../style.css";
 import { evaluateCanvas } from "./mapcss";
 
 useGeographic();
