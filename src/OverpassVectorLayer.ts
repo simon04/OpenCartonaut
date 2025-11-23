@@ -5,6 +5,7 @@ import { Geometry } from "ol/geom";
 import GeoJSON from "ol/format/GeoJSON";
 import OSMXML from "./OSMXML";
 import { splitQuerySubpart } from "./overpass";
+import { STORE } from "./store";
 
 export default class OverpassVectorLayer extends VectorLayer<
   VectorSource<Geometry>
@@ -55,7 +56,7 @@ export default class OverpassVectorLayer extends VectorLayer<
 }
 
 export async function queryOverpass(ql: string): Promise<string> {
-  const res = await fetch("https://overpass-api.de/api/interpreter", {
+  const res = await fetch(STORE.interpreter, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",

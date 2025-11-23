@@ -1,5 +1,7 @@
 import defaultMapCSS from "./default.mapcss?raw";
 
+const defaultInterpreter = "https://overpass-api.de/api/interpreter";
+
 const defaultQuery = `
 /// @subpart foreground
 relation(4740507);>;out geom;
@@ -20,6 +22,12 @@ relation(4740507);>;out geom;
 `.trim();
 
 export const STORE = new (class Store {
+  get interpreter(): string {
+    const key = "overpass-ol.interpreter";
+    const value = localStorage.getItem(key) || defaultInterpreter;
+    localStorage.setItem(key, value);
+    return value;
+  }
   get query(): string {
     return localStorage.getItem("overpass-ol.query") || defaultQuery;
   }
