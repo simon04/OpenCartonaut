@@ -25,6 +25,6 @@
     "rolldown-vite": "^7.1.16"
   },
   "dependencies": {
-    "ol": "10.6.1"
+    "ol": "^10.7.0"
   }
 }
