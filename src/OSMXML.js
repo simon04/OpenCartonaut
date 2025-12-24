@@ -89,9 +89,7 @@ class OSMXML extends XMLFeature {
         let geometry;
         if (values.ndrefs[0] == values.ndrefs[values.ndrefs.length - 1]) {
           // closed way
-          geometry = new Polygon(flatCoordinates, "XY", [
-            flatCoordinates.length,
-          ]);
+          geometry = new Polygon(flatCoordinates, "XY", [flatCoordinates.length]);
         } else {
           geometry = new LineString(flatCoordinates, "XY");
         }
@@ -125,16 +123,11 @@ const NODE_PARSERS = makeStructureNS(NAMESPACE_URIS, {
  * @param {Array<*>} objectStack Object stack.
  */
 function readNode(node, objectStack) {
-  const options = /** @type {import("ol/format/Feature.js").ReadOptions} */ (
-    objectStack[0]
-  );
+  const options = /** @type {import("ol/format/Feature.js").ReadOptions} */ (objectStack[0]);
   const state = /** @type {Object} */ (objectStack[objectStack.length - 1]);
   const id = node.getAttribute("id");
   /** @type {import("ol/coordinate.js").Coordinate} */
-  const coordinates = [
-    parseFloat(node.getAttribute("lon")),
-    parseFloat(node.getAttribute("lat")),
-  ];
+  const coordinates = [parseFloat(node.getAttribute("lon")), parseFloat(node.getAttribute("lat"))];
   state.nodes[id] = coordinates;
 
   const values = pushParseAndPop(

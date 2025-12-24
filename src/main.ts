@@ -34,9 +34,7 @@ mapcssTextarea.addEventListener(
   (e) => (e.ctrlKey || e.metaKey) && e.key === "Enter" && executeStyleClick(),
 );
 
-const executeQueryButton = document.getElementById(
-  "executeQuery",
-) as HTMLButtonElement;
+const executeQueryButton = document.getElementById("executeQuery") as HTMLButtonElement;
 executeQueryButton.addEventListener("click", executeQueryClick);
 async function executeQueryClick() {
   try {
@@ -52,9 +50,7 @@ async function executeQueryClick() {
   executeStyleClick();
 }
 
-const executeStyleButton = document.getElementById(
-  "executeStyle",
-) as HTMLButtonElement;
+const executeStyleButton = document.getElementById("executeStyle") as HTMLButtonElement;
 executeStyleButton.addEventListener("click", executeStyleClick);
 async function executeStyleClick() {
   try {

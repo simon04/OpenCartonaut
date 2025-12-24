@@ -7,9 +7,7 @@ import OSMXML from "./OSMXML";
 import { splitQuerySubpart } from "./overpass";
 import { STORE } from "./store";
 
-export default class OverpassVectorLayer extends VectorLayer<
-  VectorSource<Geometry>
-> {
+export default class OverpassVectorLayer extends VectorLayer<VectorSource<Geometry>> {
   async executeQuery(query: string) {
     const map = this.getMapInternal();
     const features = await Promise.all(
@@ -48,9 +46,7 @@ export default class OverpassVectorLayer extends VectorLayer<
     const rules = parseMapCSS(mapcss);
     console.info("Parsed MapCSS", rules);
     const vectorSource = this.getSource();
-    vectorSource?.forEachFeature((feature) =>
-      feature.setStyle(evaluateStyle(rules, feature)),
-    );
+    vectorSource?.forEachFeature((feature) => feature.setStyle(evaluateStyle(rules, feature)));
     return rules;
   }
 }
