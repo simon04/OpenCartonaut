@@ -1,4 +1,4 @@
-import { type Plugin, defineConfig, createFilter } from "rolldown-vite";
+import { type Plugin, defineConfig, createFilter } from "vite";
 import _peggy from "peggy";
 
 export default defineConfig({
