@@ -15,7 +15,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --base ./",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "test": "node --import ./src/peggyLoader.mjs --test 'src/*.spec.ts'"
   },
   "dependencies": {
     "ol": "^10.7.0"
@@ -26,5 +27,6 @@
     "oxfmt": "^0.20.0",
     "peggy": "^5.0.6",
     "vite": "^8.0.0-beta.4"
-  }
+  },
+  "packageManager": "pnpm@11.4.0"
 }

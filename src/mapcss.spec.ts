@@ -6,7 +6,7 @@ import { evaluateRules, parseMapCSS } from "./mapcss";
 import { Point } from "ol/geom";
 
 test("text", () => {
-  const mapcss = readFileSync("./railway.mapcss", "utf8");
+  const mapcss = readFileSync(`${__dirname}/railway.mapcss`, "utf8");
   const rules = parseMapCSS(mapcss);
   const station = new Point([15.655048, 48.597765]);
   station.setProperties({ name: "Gars-Thunau", railway: "station" });
@@ -31,7 +31,7 @@ test("text", () => {
 });
 
 test("string", () => {
-  const mapcss = readFileSync("./mapcss.spec.quoting.mapcss", "utf8");
+  const mapcss = readFileSync(`${__dirname}/mapcss.spec.quoting.mapcss`, "utf8");
   const rules = parseMapCSS(mapcss);
   const declarations = evaluateRules(rules, undefined);
   expect(declarations).toEqual({

@@ -6,7 +6,7 @@ plugin({
   name: "peggy",
   async setup(build) {
     const { readFileSync } = await import("fs");
-    const { generate }: typeof peggy = (await import("peggy")).default();
+    const { generate }: typeof peggy = (await import("peggy"));
     build.onLoad({ filter: /\.pegjs/ }, ({ path }) => {
       const grammar = readFileSync(path, "utf8");
       const contents = generate(grammar, { output: "parser" });
