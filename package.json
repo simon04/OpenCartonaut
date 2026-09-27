@@ -20,7 +20,7 @@
     "prepare": "vp config"
   },
   "dependencies": {
-    "ol": "^10.7.0"
+    "ol": "^10.10.0"
   },
   "devDependencies": {
     "@types/geojson": "^7946.0.10",
