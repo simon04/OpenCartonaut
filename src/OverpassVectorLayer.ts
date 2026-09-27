@@ -37,7 +37,8 @@ export default class OverpassVectorLayer extends VectorLayer<VectorSource<Featur
       const [minx, miny, maxx, maxy] = map.getView().calculateExtent();
       query = query.replaceAll("{{bbox}}", [miny, minx, maxy, maxx].join(","));
     }
-    const xml = await queryOverpass(query);
+    const interpreter = query.match(/\/\/\/\s*@interpreter\s+(\S+)/)?.[1];
+    const xml = await queryOverpass(query, interpreter);
     const features = new OSMXML().readFeatures(xml);
     features.forEach((feature) => feature.set("@subpart", subpart));
     return features;
@@ -52,11 +53,11 @@ export default class OverpassVectorLayer extends VectorLayer<VectorSource<Featur
   }
 }
 
-export async function queryOverpass(ql: string): Promise<string> {
+export async function queryOverpass(ql: string, interpreter = STORE.interpreter): Promise<string> {
   const key = `overpass-ol.cache.${ql}`;
   const cached = sessionStorage.getItem(key);
   if (cached !== null) return cached;
-  const text = await fetchOverpass(ql);
+  const text = await fetchOverpass(ql, interpreter);
   try {
     sessionStorage.setItem(key, text);
   } catch (e) {
@@ -65,8 +66,8 @@ export async function queryOverpass(ql: string): Promise<string> {
   return text;
 }
 
-async function fetchOverpass(ql: string): Promise<string> {
-  const res = await fetch(STORE.interpreter, {
+async function fetchOverpass(ql: string, interpreter: string): Promise<string> {
+  const res = await fetch(interpreter, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
