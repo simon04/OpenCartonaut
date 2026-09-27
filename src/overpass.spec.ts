@@ -1,13 +1,14 @@
-/// <reference types="bun-types" />
-import { expect, test } from "bun:test";
-import "./bunPeggyPlugin";
+/// <reference types="node" />
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import { splitQuerySubpart } from "./overpass";
 
 test("splitQuerySubpart none", () => {
   const query = `relation(4740507);>;out geom;`;
-  return expect(splitQuerySubpart(query)).toEqual([
+  return assert.deepEqual(splitQuerySubpart(query), [
     {
       query: "relation(4740507);>;out geom;",
+      subpart: undefined,
       start: 0,
     },
   ]);
@@ -19,9 +20,10 @@ relation(4740507);>;out geom;
 /// @subpart background
 nwr[railway=rail]({{bbox}});out geom;
 `;
-  return expect(splitQuerySubpart(query)).toEqual([
+  return assert.deepEqual(splitQuerySubpart(query), [
     {
       query: "relation(4740507);>;out geom;",
+      subpart: undefined,
       start: 0,
     },
     {
@@ -39,7 +41,7 @@ relation(4740507);>;out geom;
 /// @subpart background
 nwr[railway=rail]({{bbox}});out geom;
 `;
-  return expect(splitQuerySubpart(query)).toEqual([
+  return assert.deepEqual(splitQuerySubpart(query), [
     {
       query: "/// @subpart foreground\nrelation(4740507);>;out geom;\n",
       subpart: "foreground",

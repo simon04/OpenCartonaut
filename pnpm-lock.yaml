@@ -183,9 +183,9 @@ importers:
       '@types/geojson':
         specifier: ^7946.0.10
         version: 7946.0.10
-      bun-types:
-        specifier: ^1.3.5
-        version: 1.3.5
+      '@types/node':
+        specifier: ^25.9.1
+        version: 25.9.1
       peggy:
         specifier: ^5.0.6
         version: 5.0.6
@@ -660,9 +660,6 @@ packages:
   assertion-error@2.0.1:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
-
-  bun-types@1.3.5:
-    resolution: {integrity: sha512-inmAYe2PFLs0SUbFOWSVD24sg1jFlMPxOjOSSCYqUgn4Hsc3rDc7dFvfVYjFPNHtov6kgUeulV4SxbuIV/stPw==}
 
   commander@14.0.3:
     resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
@@ -1165,10 +1162,6 @@ snapshots:
     optional: true
 
   assertion-error@2.0.1: {}
-
-  bun-types@1.3.5:
-    dependencies:
-      '@types/node': 25.9.1
 
   commander@14.0.3: {}
 

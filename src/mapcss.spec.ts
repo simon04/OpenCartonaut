@@ -1,17 +1,17 @@
-/// <reference types="bun-types" />
-import { expect, test } from "bun:test";
-import "./bunPeggyPlugin";
+/// <reference types="node" />
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import { readFileSync } from "fs";
 import { evaluateRules, parseMapCSS } from "./mapcss";
 import { Point } from "ol/geom";
 
 test("text", () => {
-  const mapcss = readFileSync(`${__dirname}/railway.mapcss`, "utf8");
+  const mapcss = readFileSync(`${import.meta.dirname}/railway.mapcss`, "utf8");
   const rules = parseMapCSS(mapcss);
   const station = new Point([15.655048, 48.597765]);
   station.setProperties({ name: "Gars-Thunau", railway: "station" });
   const declarations = evaluateRules(rules, station);
-  expect(declarations).toEqual({
+  assert.deepEqual(declarations, {
     color: "white",
     "fill-color": "#dc0000",
     "fill-opacity": 1,
@@ -31,10 +31,10 @@ test("text", () => {
 });
 
 test("string", () => {
-  const mapcss = readFileSync(`${__dirname}/mapcss.spec.quoting.mapcss`, "utf8");
+  const mapcss = readFileSync(`${import.meta.dirname}/mapcss.spec.quoting.mapcss`, "utf8");
   const rules = parseMapCSS(mapcss);
-  const declarations = evaluateRules(rules, undefined);
-  expect(declarations).toEqual({
+  const declarations = evaluateRules(rules, new Point([]));
+  assert.deepEqual(declarations, {
     string: 'foo"bar\\baz\nnew\ttab',
     eval: 'foo"bar\\baz\nnew\ttab',
   });
@@ -42,6 +42,6 @@ test("string", () => {
 
 test("arithmetic", () => {
   const rules = parseMapCSS("* {value: -2.7 > +3 ? 12 : 2 * (3 + 4);}");
-  const declarations = evaluateRules(rules, undefined);
-  expect(declarations).toEqual({ value: 14 });
+  const declarations = evaluateRules(rules, new Point([]));
+  assert.deepEqual(declarations, { value: 14 });
 });
